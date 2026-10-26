@@ -133,7 +133,13 @@ class ItemEntry extends FeedEntry {
   final YtItem item;
 }
 
-class PostEntry extends FeedEntry {\n  const PostEntry(this.post);\n\n  final CommunityPost post;\n}\n\nclass ShelfEntry extends FeedEntry {
+class PostEntry extends FeedEntry {
+  const PostEntry(this.post);
+
+  final CommunityPost post;
+}
+
+class ShelfEntry extends FeedEntry {
   const ShelfEntry(this.title, this.items, {this.shorts = false});
 
   final String title;
