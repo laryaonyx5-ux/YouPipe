@@ -34,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
         child: RefreshIndicator(
           color: context.yt.textPrimary,
           onRefresh: () async {
+            HomeController.touched = false;
             ref.invalidate(homeShortsProvider);
             ref.invalidate(homeProvider);
             await ref.read(homeProvider.future);
