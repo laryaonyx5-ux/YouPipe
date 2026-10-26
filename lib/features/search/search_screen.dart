@@ -135,7 +135,7 @@ class SearchField extends StatelessWidget {
         onSubmitted: onSubmitted,
         textInputAction: TextInputAction.search,
         style: const TextStyle(fontSize: 16),
-        decoration: const InputDecoration(hintText: 'Search YouPipe', isCollapsed: true, border: InputBorder.none),
+        decoration: const InputDecoration(hintText: 'Rechercher sur YouPipe', isCollapsed: true, border: InputBorder.none),
       ),
     );
   }
@@ -159,7 +159,7 @@ class SearchField extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  text.isEmpty ? 'Search YouPipe' : text,
+                  text.isEmpty ? 'Rechercher sur YouPipe' : text,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 16, color: text.isEmpty ? context.yt.textSecondary : null),
