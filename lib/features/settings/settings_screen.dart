@@ -111,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             SwitchListTile(
               title: const Text('Image dans l'image'),
-              subtitle: const Text('Continuer à regarder dans une petite fenêtre en quittant l'application'),
+              subtitle: const Text("Continuer à regarder dans une petite fenêtre en quittant l'application"),
               value: s.pip,
               onChanged: (v) => ctl.update(s.copyWith(pip: v)),
             ),
@@ -134,26 +134,26 @@ class SettingsScreen extends ConsumerWidget {
               ),
             for (final section in settingsExtraSections) section(context, ref),
             const Divider(),
-            header('Gérer tout l'historique'),
+            header("Gérer tout l'historique"),
             SwitchListTile(
-              title: const Text('Suspendre l'historique des vidéos regardées'),
+              title: const Text("Suspendre l'historique des vidéos regardées"),
               value: !s.saveHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveHistory: !v)),
             ),
             SwitchListTile(
-              title: const Text('Suspendre l'historique des recherches'),
+              title: const Text("Suspendre l'historique des recherches"),
               value: !s.saveSearchHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveSearchHistory: !v)),
             ),
             ListTile(
-              title: const Text('Effacer l'historique des vidéos regardées'),
+              title: const Text("Effacer l'historique des vidéos regardées"),
               onTap: () async {
                 await ref.read(libraryProvider).clearHistory();
                 if (context.mounted) showSnack(context, 'Historique des vidéos regardées effacé');
               },
             ),
             ListTile(
-              title: const Text('Effacer l'historique des recherches'),
+              title: const Text("Effacer l'historique des recherches"),
               onTap: () async {
                 await ref.read(libraryProvider).clearSearches();
                 if (context.mounted) showSnack(context, 'Historique des recherches effacé');
