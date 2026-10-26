@@ -17,20 +17,20 @@ class HomeChip {
   final String? params;
   final HomeChipKind kind;
 
-  static const all = HomeChip('All', kind: HomeChipKind.all);
+  static const all = HomeChip('Tout', kind: HomeChipKind.all);
 
   static final defaults = [
     all,
-    const HomeChip('Music', query: 'music'),
-    const HomeChip('Gaming', query: 'gaming'),
-    HomeChip('Live', query: 'live', params: SearchFilter.live.params),
-    const HomeChip('News', query: 'news today'),
+    const HomeChip('Musique', query: 'music'),
+    const HomeChip('Jeux vidéo', query: 'gaming'),
+    HomeChip('En direct', query: 'live', params: SearchFilter.live.params),
+    const HomeChip('Actualités', query: 'news today'),
     const HomeChip('Podcasts', query: 'podcast'),
     const HomeChip('Sports', query: 'sports highlights'),
-    const HomeChip('Comedy', query: 'comedy'),
-    const HomeChip('Cooking', query: 'cooking recipes'),
-    const HomeChip('Science', query: 'science'),
-    const HomeChip('Recently uploaded', kind: HomeChipKind.subscriptions),
+    const HomeChip('Humour', query: 'comedy'),
+    const HomeChip('Cuisine', query: 'cooking recipes'),
+    const HomeChip('Sciences', query: 'science'),
+    const HomeChip('Récemment mises en ligne', kind: HomeChipKind.subscriptions),
   ];
 
   @override
