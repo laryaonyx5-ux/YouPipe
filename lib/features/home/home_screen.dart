@@ -18,7 +18,12 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final home = ref.watch(homeProvider);
     final chip = ref.watch(homeChipProvider);
-    final shorts = ref.watch(homeShortsProvider).value ?? const <VideoItem>[];
+    final shorts = chip.kind == HomeChipKind.all
+        ? (ref.watch(subscriptionFeedProvider).value ?? const [])
+              .map((f) => f.video)
+              .where((v) => v.isShort)
+              .toList()
+        : ref.watch(homeShortsProvider).value ?? const <VideoItem>[];
     final hasHistory = (ref.watch(historyProvider).value ?? const []).isNotEmpty;
     final hasSubs = (ref.watch(subscriptionsProvider).value ?? const []).isNotEmpty;
     final chips = [
