@@ -99,7 +99,7 @@ class CastButton extends ConsumerWidget {
     final status = ref.watch(castStatusProvider);
     if (status.state == CastState.none) return const SizedBox.shrink();
     return IconButton(
-      tooltip: status.connected ? 'Casting to ${status.device ?? 'a device'}' : 'Cast',
+      tooltip: status.connected ? 'Diffusion vers ${status.device ?? 'un appareil'}' : 'Cast',
       icon: Icon(
         status.connected ? Symbols.cast_connected : Symbols.cast,
         color: color,
@@ -149,7 +149,7 @@ class _CastSheetState extends ConsumerState<_CastSheet> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
                 child: Text(
-                  status.connected ? 'Casting to ${status.device ?? 'a device'}' : 'Select a device',
+                  status.connected ? 'Diffusion vers ${status.device ?? 'un appareil'}' : 'Sélectionner un appareil',
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
