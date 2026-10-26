@@ -249,7 +249,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ),
       ListTile(
         leading: const Icon(Symbols.thumb_up, weight: 300),
-        title: const Text('Vidéos "J'aime"'),
+        title: const Text("Vidéos \"J'aime\""),
         onTap: () => openPlaylist(context, ref, 'LL'),
       ),
       ListTile(
@@ -286,7 +286,7 @@ Future<void> _importAccountSubscriptions(BuildContext context, WidgetRef ref) as
     }
   } catch (e, st) {
     debugPrint('YouPipe: account subscriptions import failed: $e\n$st');
-    if (context.mounted) showSnack(context, 'Couldn\'t import subscriptions');
+    if (context.mounted) showSnack(context, "Impossible d'importer les abonnements");
   }
 }
 
