@@ -283,7 +283,7 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
   Widget build(BuildContext context) {
     final subscriptionsState = ref.watch(subscriptionsProvider);
     final subs = subscriptionsState.value ?? const <ChannelItem>[];
-    final refreshing = _syncing && subs.isEmpty;
+    final refreshing = subs.isEmpty && (_syncing || subscriptionsState.isLoading);
 
     Widget emptyState() => Center(
       child: Padding(
