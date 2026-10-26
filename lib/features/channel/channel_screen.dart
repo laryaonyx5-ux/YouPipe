@@ -56,7 +56,7 @@ class ChannelScreen extends ConsumerWidget {
                   ],
                 ),
                 SliverToBoxAdapter(child: _Header(page: p)),
-                SliverPersistentHeader(
+                SliiverPersistentHeader(
                   pinned: true,
                   delegate: _TabBarDelegate(
                     TabBar(isScrollable: true, tabs: [for (final t in tabs) Tab(text: t.title)]),
@@ -164,7 +164,7 @@ class _Header extends ConsumerWidget {
   }
 }
 
-class _TabBarDelegate extends SliiverPersistentHeaderDelegate {
+class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   _TabBarDelegate(this.tabBar, this.color);
 
   final TabBar tabBar;
@@ -240,7 +240,7 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
         padding: const EdgeInsets.all(4),
         sliver: SliverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliiverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 9 / 16,
             mainAxisSpacing: 4,
@@ -280,10 +280,10 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
             ),
           body,
           if (list.value?.loadingMore ?? false)
-            const SliverToBoxAdapter(
+            const SliiverToBoxAdapter(
               child: Padding(padding: EdgeInsets.all(24), child: LoadingView()),
             ),
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          const SliiverToBoxAdapter(child: SizedBox(height: 24)),
           const SliverBottomInset(),
         ],
       ),
@@ -413,7 +413,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverFillRemaining(
+          SliiverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Padding(
@@ -454,7 +454,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliiverPadding(
+          SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
