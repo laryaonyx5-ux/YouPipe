@@ -170,8 +170,8 @@ Widget updateSettings(BuildContext context, WidgetRef ref) {
           ),
         ),
         SwitchListTile(
-          title: const Text('Check for updates automatically'),
-          subtitle: const Text('Looks for a new release on GitHub when the app opens'),
+          title: const Text('Rechercher automatiquement les mises à jour'),
+          subtitle: const Text('Recherche une nouvelle version sur GitHub à l'ouverture de l'application'),
           value: prefs.getBool('autoUpdateCheck') ?? true,
           onChanged: (v) async {
             await prefs.setBool('autoUpdateCheck', v);
@@ -179,7 +179,7 @@ Widget updateSettings(BuildContext context, WidgetRef ref) {
           },
         ),
         ListTile(
-          title: const Text('Check for updates'),
+          title: const Text('Rechercher les mises à jour'),
           subtitle: Text('Version ${info?.versionName ?? '…'}'),
           trailing: busy
               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
@@ -191,13 +191,13 @@ Widget updateSettings(BuildContext context, WidgetRef ref) {
                     final update = await ref.read(updateProvider.notifier).checkNow();
                     if (!context.mounted) return;
                     if (update == null) {
-                      showSnack(context, "You're up to date");
+                      showSnack(context, "L'application est à jour");
                     } else {
                       unawaited(showUpdateSheet(context, update));
                     }
                   } on UpdateException catch (e) {
                     if (context.mounted) {
-                      showSnack(context, e.code == 'NETWORK' ? "Couldn't check for updates" : e.message);
+                      showSnack(context, e.code == 'NETWORK' ? "Impossible de rechercher les mises à jour" : e.message);
                     }
                   }
                 },
