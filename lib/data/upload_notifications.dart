@@ -134,7 +134,6 @@ class UploadNotificationService {
       existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
     );
     // Establish the initial baseline now instead of waiting for the first periodic run.
-    final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(_enabledKey) ?? true) {
       final db = AppDatabase();
       await checkUploads(db, prefs, _plugin);
