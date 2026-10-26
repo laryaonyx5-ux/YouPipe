@@ -208,7 +208,7 @@ class PlaylistScreen extends ConsumerWidget {
                             onTap: () async {
                               await ref.read(libraryProvider).setPlaylistSaved(p.asItem, !saved);
                               if (context.mounted) {
-                                showSnack(context, saved ? 'Removed from library' : 'Saved to library');
+                                showSnack(context, saved ? 'Retiré de la bibliothèque' : 'Enregistré dans la bibliothèque');
                               }
                             },
                           ),
@@ -257,7 +257,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
     final videos =
         (isLiked ? ref.watch(likedVideosProvider) : ref.watch(localPlaylistVideosProvider(id))).value ??
         const <VideoItem>[];
-    final title = isLiked ? 'Vidéos "J'aime"' : playlist?.name ?? '';
+    final title = isLiked ? "Vidéos \"J'aime\"" : playlist?.name ?? '';
     final userMade = !isLiked && playlist != null && !playlist.isWatchLater;
     final lib = ref.read(libraryProvider);
     void remove(VideoItem v) {
@@ -295,7 +295,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 }
               },
               itemBuilder: (_) => const [
-                PopupMenuItem(value: 'rename', child: Text('Rename')),
+                PopupMenuItem(value: 'rename', child: Text('Renommer')),
                 PopupMenuItem(value: 'delete', child: Text('Supprimer la playlist')),
               ],
             ),
@@ -310,7 +310,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 thumbnail: videos.firstOrNull?.thumbnailOrDefault,
                 icon: isLiked ? Symbols.thumb_up : Symbols.schedule,
                 meta: [
-                  if (userMade) 'Private' else 'Playlist',
+                  if (userMade) 'Privée' else 'Playlist',
                   '${videos.length} video${videos.length == 1 ? '' : 's'}',
                 ],
                 onPlayAll: videos.isEmpty ? null : () => _playList(context, ref, videos),
