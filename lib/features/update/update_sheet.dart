@@ -30,11 +30,11 @@ class _UpdateSheet extends ConsumerWidget {
 
     final Widget actions = switch (state) {
       UpdateDownloading(:final received, :final total, :final progress) => _Progress(
-        label: total > 0 ? 'Downloading… ${_mb(received)} of ${_mb(total)}' : 'Downloading…',
+        label: total > 0 ? 'Téléchargement… ${_mb(received)} sur ${_mb(total)}' : 'Téléchargement…',
         value: progress,
         onCancel: controller.cancelDownload,
       ),
-      UpdateInstalling() => const _Progress(label: 'Opening the installer…'),
+      UpdateInstalling() => const _Progress(label: 'Ouverture du programme d'installation…'),
       UpdateFailed(:final error) => _Failure(
         error: error,
         onRetry: () => controller.downloadAndInstall(update),
@@ -52,7 +52,7 @@ class _UpdateSheet extends ConsumerWidget {
               if (context.mounted) Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(foregroundColor: context.yt.textSecondary),
-            child: const Text('Skip this version'),
+            child: const Text('Ignorer cette version'),
           ),
           OverflowBar(
             spacing: 8,
@@ -61,7 +61,7 @@ class _UpdateSheet extends ConsumerWidget {
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: TextButton.styleFrom(foregroundColor: context.yt.textPrimary),
-                child: const Text('Later'),
+                child: const Text('Plus tard'),
               ),
               FilledButton(
                 onPressed: () => controller.downloadAndInstall(update),
@@ -70,7 +70,7 @@ class _UpdateSheet extends ConsumerWidget {
                   foregroundColor: context.yt.background,
                   shape: const StadiumBorder(),
                 ),
-                child: const Text('Update'),
+                child: const Text('Mettre à jour'),
               ),
             ],
           ),
@@ -89,7 +89,7 @@ class _UpdateSheet extends ConsumerWidget {
           Text('Version ${update.version} • ${_mb(update.apk.size)}', style: theme.textTheme.bodyMedium),
           if (notes.isNotEmpty) ...[
             const SizedBox(height: 16),
-            Text("What's new", style: theme.textTheme.titleSmall),
+            Text('Nouveautés', style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             ConstrainedBox(
               constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.3),
@@ -101,7 +101,7 @@ class _UpdateSheet extends ConsumerWidget {
             child: TextButton(
               onPressed: () => ref.read(updaterProvider).openUrl(update.release.pageUrl),
               style: TextButton.styleFrom(foregroundColor: context.yt.textSecondary, padding: EdgeInsets.zero),
-              child: const Text('Full release notes'),
+              child: const Text('Notes de version complètes'),
             ),
           ),
           const SizedBox(height: 8),
@@ -153,10 +153,10 @@ class _Failure extends StatelessWidget {
   final VoidCallback onOpenReleases;
 
   String get _message => switch (error.code) {
-    'NETWORK' => "Couldn't download the update. Check your connection and try again.",
-    'HASH_MISMATCH' => 'The download was damaged. Try again.',
+    'NETWORK' => 'Impossible de télécharger la mise à jour. Vérifiez votre connexion et réessayez.',
+    'HASH_MISMATCH' => 'Le téléchargement est endommagé. Réessayez.',
     'SIGNATURE_MISMATCH' =>
-      'This copy of YouPipe was installed from a different build, so Android won\'t update it. '
+      'Cette version de YouPipe provient d'une compilation différente ; Android ne peut pas la mettre à jour. '
           'Désinstallez l'application, puis installez la dernière version depuis GitHub.',
     'DOWNGRADE' => 'La version installée est plus récente que cette version.',
     _ => "The update couldn't be installed (${error.message}).",
