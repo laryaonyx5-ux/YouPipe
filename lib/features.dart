@@ -14,6 +14,7 @@ import 'features/remote_config.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/sponsorblock/sponsorblock.dart';
 import 'features/subscriptions/import_export.dart';
+import 'features/subscriptions/notifications_screen.dart';
 import 'features/subscriptions/subscriptions_screen.dart';
 import 'features/subscriptions/upload_notification_route.dart';
 import 'features/subscriptions/upload_notification_settings.dart';
@@ -56,6 +57,19 @@ void registerFeatures() {
     ),
   );
 
+  // Native notification inbox and internal video opening.
+  extraRootRoutes.add(
+    GoRoute(
+      path: '/notifications',
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (_, _) => const NotificationsScreen(),
+    ),
+  );
+  topBarExtraActions.add((context) => IconButton(
+    tooltip: 'Notifications',
+    onPressed: () => GoRouter.of(context).push('/notifications'),
+    icon: const Icon(Symbols.notifications_none),
+  ));
   // Notifications from subscribed channels, with internal video opening.
   extraRootRoutes.add(
     GoRoute(
