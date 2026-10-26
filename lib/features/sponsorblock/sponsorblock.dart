@@ -14,7 +14,7 @@ enum SbCategory {
   sponsor('Sponsor', 'Promotion rémunérée', Color(0xFF00D400), SbAction.skip),
   selfpromo('Autopromotion non rémunérée', 'Produits dérivés, dons et remerciements', Color(0xFFFFFF00), SbAction.skip),
   interaction("Rappel d'interaction", "\"Aimer et s'abonner\"", Color(0xFFCC00FF), SbAction.skip),
-  intro('Intermission/intro', 'Animations d'introduction et pauses', Color(0xFF00FFFF), SbAction.show),
+  intro('Intermission/intro', "Animations d'introduction et pauses", Color(0xFF00FFFF), SbAction.show),
   outro('Endcards/credits', 'Génériques et écrans de fin', Color(0xFF0202ED), SbAction.show),
   preview('Preview/recap', 'Extraits de ce qui arrive ou de ce qui a été montré', Color(0xFF008FD6), SbAction.show),
   filler('Digression de remplissage', 'Blagues et digressions hors sujet', Color(0xFF7300FF), SbAction.off),

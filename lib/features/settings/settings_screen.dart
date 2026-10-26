@@ -110,7 +110,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             SwitchListTile(
-              title: const Text('Image dans l'image'),
+              title: const Text("Image dans l'image"),
               subtitle: const Text("Continuer à regarder dans une petite fenêtre en quittant l'application"),
               value: s.pip,
               onChanged: (v) => ctl.update(s.copyWith(pip: v)),
