@@ -95,7 +95,7 @@ class _TvSearchBox extends StatelessWidget {
                   children: [
                     Icon(Symbols.search, size: 22, color: c.textSecondary),
                     const SizedBox(width: 12),
-                    Text('Search', style: TextStyle(color: c.textSecondary, fontSize: 16)),
+                    Text('Rechercher', style: TextStyle(color: c.textSecondary, fontSize: 16)),
                   ],
                 ),
               ),
