@@ -5,7 +5,7 @@ import '../../ui/theme/yt_theme.dart';
 import 'update.dart';
 import 'updater.dart';
 
-/// "Update available": what's new, then Later / Skip this version / Update. Update downloads the APK for
+/// "Mise à jour disponible": what's new, then Later / Skip this version / Update. Update downloads the APK for
 /// this phone, checks it and opens Android's install screen. Closing the sheet doesn't stop a download.
 Future<void> showUpdateSheet(BuildContext context, AvailableUpdate update) => showModalBottomSheet<void>(
   context: context,
@@ -84,7 +84,7 @@ class _UpdateSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Update available', style: theme.textTheme.titleLarge),
+          Text('Mise à jour disponible', style: theme.textTheme.titleLarge),
           const SizedBox(height: 4),
           Text('Version ${update.version} • ${_mb(update.apk.size)}', style: theme.textTheme.bodyMedium),
           if (notes.isNotEmpty) ...[
@@ -137,7 +137,7 @@ class _Progress extends StatelessWidget {
             TextButton(
               onPressed: onCancel,
               style: TextButton.styleFrom(foregroundColor: context.yt.textPrimary),
-              child: const Text('Cancel'),
+              child: const Text('Annuler'),
             ),
         ],
       ),
@@ -157,8 +157,8 @@ class _Failure extends StatelessWidget {
     'HASH_MISMATCH' => 'The download was damaged. Try again.',
     'SIGNATURE_MISMATCH' =>
       'This copy of YouPipe was installed from a different build, so Android won\'t update it. '
-          'Uninstall it, then install the latest version from GitHub.',
-    'DOWNGRADE' => 'The installed version is newer than this release.',
+          'Désinstallez l'application, puis installez la dernière version depuis GitHub.',
+    'DOWNGRADE' => 'La version installée est plus récente que cette version.',
     _ => "The update couldn't be installed (${error.message}).",
   };
 
@@ -179,7 +179,7 @@ class _Failure extends StatelessWidget {
               foregroundColor: context.yt.background,
               shape: const StadiumBorder(),
             ),
-            child: Text(reinstall ? 'Open GitHub' : 'Try again'),
+            child: Text(reinstall ? 'Ouvrir GitHub' : 'Réessayer'),
           ),
         ),
       ],
