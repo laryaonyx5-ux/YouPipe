@@ -755,16 +755,21 @@ CommunityPostsPage parseCommunityPosts(Json data) {
             nav<String>(root, ['postViewModel', 'postId']))
         ?.toString();
     final text = firstText(root, {'contentText', 'postText', 'text', 'message', 'content'});
-    if (id == null || text == null || !seen.add(id)) return null;
     final images = imagesOf(root);
+    final pollOptions = pollOptionsOf(root);
+    // YouTube posts can be image-only or poll-only; requiring text silently discarded those posts.
+    if (id == null || !seen.add(id) ||
+        ((text == null || text.trim().isEmpty) && images.isEmpty && pollOptions.isEmpty)) {
+      return null;
+    }
     return CommunityPost(
       id: id,
-      text: text,
+      text: text ?? '',
       author: firstText(root, {'authorText', 'authorName', 'displayName'}),
       authorAvatar: firstImage(root, {'authorThumbnail', 'avatar', 'avatarViewModel', 'authorAvatar', 'avatarUrl'}),
       publishedText: firstText(root, {'publishedTimeText', 'publishedTime', 'timestampText'}),
       images: images,
-      pollOptions: pollOptionsOf(root),
+      pollOptions: pollOptions,
       likeCount: firstText(root, {'voteCount', 'likeCount', 'likesCount'}),
       commentCount: firstText(root, {'commentCount', 'replyCount'}),
     );
