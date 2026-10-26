@@ -281,7 +281,48 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final subs = ref.watch(subscriptionsProvider).value ?? const <ChannelItem>[];
+    final subscriptionsState = ref.watch(subscriptionsProvider);
+    final subs = subscriptionsState.value ?? const <ChannelItem>[];
+    final refreshing = _syncing && subs.isEmpty;
+
+    Widget emptyState() => Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Symbols.subscriptions, size: 48, color: context.yt.textSecondary),
+            const SizedBox(height: 16),
+            Text(
+              subscriptionsState.hasError ? 'Impossible de lire les abonnements' : 'Aucun abonnement trouvé',
+              style: TextStyle(color: context.yt.textPrimary, fontSize: 18, fontWeight: FontWeight.w600),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _syncError != null || subscriptionsState.hasError
+                  ? 'Vérifie ta connexion et actualise la liste.'
+                  : 'Connecte-toi à YouTube ou ajoute des chaînes depuis la recherche.',
+              style: TextStyle(color: context.yt.textSecondary),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: _syncing ? null : () {
+                setState(() {
+                  _syncing = true;
+                  _syncError = null;
+                });
+                unawaited(_refreshChannels());
+              },
+              icon: const Icon(Symbols.refresh),
+              label: const Text('Réessayer'),
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tous les abonnements'),
@@ -289,43 +330,35 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
         actions: [
           IconButton(
             tooltip: 'Actualiser',
-            onPressed: _syncing ? null : () => setState(() {
-              _syncing = true;
-              _syncError = null;
+            onPressed: _syncing ? null : () {
+              setState(() {
+                _syncing = true;
+                _syncError = null;
+              });
               unawaited(_refreshChannels());
-            }),
+            },
             icon: const Icon(Symbols.refresh),
           ),
           for (final a in ChannelsScreen.extraActions) a(context, ref),
         ],
       ),
-      body: SizedBox.expand(
-        child: MaxContentWidth(
-          child: _syncing && subs.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : subs.isEmpty
-                ? EmptyView(
-                    icon: Symbols.subscriptions,
-                    title: 'Aucun abonnement trouvé',
-                    message: _syncError == null
-                        ? 'Connecte-toi à ton compte YouTube ou recherche des chaînes pour les ajouter.'
-                        : 'Impossible de charger les abonnements. Vérifie ta connexion puis actualise.',
-                  )
-                : RefreshIndicator(
-                    onRefresh: _refreshChannels,
-                    child: ListView.builder(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: subs.length,
-                      itemBuilder: (_, i) => ListTile(
-                        leading: Avatar(subs[i].avatar, size: 48, name: subs[i].name),
-                        title: Text(subs[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        onTap: () => openChannel(context, ref, subs[i].id),
-                        trailing: SubscribeButton(subs[i], compact: true),
-                      ),
+      body: refreshing
+          ? const Center(child: CircularProgressIndicator())
+          : subs.isNotEmpty
+              ? RefreshIndicator(
+                  onRefresh: _refreshChannels,
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: subs.length,
+                    itemBuilder: (_, i) => ListTile(
+                      leading: Avatar(subs[i].avatar, size: 48, name: subs[i].name),
+                      title: Text(subs[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      onTap: () => openChannel(context, ref, subs[i].id),
+                      trailing: SubscribeButton(subs[i], compact: true),
                     ),
                   ),
-        ),
-      ),
+                )
+              : emptyState(),
     );
   }
 }
