@@ -474,7 +474,7 @@ class _CommunityPostCard extends StatelessWidget {
     final c = context.yt;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: c.surface,
+      color: c.raised,
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -519,7 +519,7 @@ class _CommunityPostCard extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 6),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    border: Border.all(color: c.outline),
+                    border: Border.all(color: c.divider),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(option, style: TextStyle(color: c.textPrimary)),
