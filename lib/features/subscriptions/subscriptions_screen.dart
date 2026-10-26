@@ -299,8 +299,9 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
           for (final a in ChannelsScreen.extraActions) a(context, ref),
         ],
       ),
-      body: MaxContentWidth(
-        child: _syncing && subs.isEmpty
+      body: SizedBox.expand(
+        child: MaxContentWidth(
+          child: _syncing && subs.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : subs.isEmpty
                 ? EmptyView(
@@ -323,6 +324,7 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
                       ),
                     ),
                   ),
+        ),
       ),
     );
   }
