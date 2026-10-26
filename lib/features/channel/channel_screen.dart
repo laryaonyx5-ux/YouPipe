@@ -238,9 +238,9 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
     } else if (isShorts) {
       body = SliverPadding(
         padding: const EdgeInsets.all(4),
-        sliver: SliiverGrid.builder(
+        sliver: SliverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
-          gridDelegate: const SliiverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 9 / 16,
             mainAxisSpacing: 4,
@@ -471,7 +471,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
                 child: TextButton(onPressed: _loadMore, child: const Text('Erreur de chargement — réessayer')),
               ),
             ),
-          const SliiverToBoxAdapter(child: SizedBox(height: 24)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
           const SliverBottomInset(),
         ],
       ),
