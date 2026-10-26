@@ -125,7 +125,7 @@ class _Header extends ConsumerWidget {
                     controller: scroll,
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                     children: [
-                      const Text('About', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                      const Text('À propos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
                       const SizedBox(height: 12),
                       HtmlText(page.description!, style: const TextStyle(fontSize: 14, height: 1.4)),
                     ],
