@@ -139,7 +139,7 @@ class YouScreen extends ConsumerWidget {
                   children: [
                     _PlaylistCard(
                       title: "Vidéos \"J'aime\"",
-                      subtitle: '${liked.length} videos',
+                      subtitle: '${liked.length} vidéos',
                       thumbnail: liked.firstOrNull?.thumbnailOrDefault,
                       icon: Symbols.thumb_up,
                       onTap: () => context.push('${branchPrefix(context)}/local/${LocalPlaylistScreen.liked}'),
@@ -147,7 +147,7 @@ class YouScreen extends ConsumerWidget {
                     for (final p in playlists)
                       _PlaylistCard(
                         title: p.playlist.name,
-                        subtitle: p.playlist.isWatchLater ? '${p.count} videos' : 'Private · ${p.count} videos',
+                        subtitle: p.playlist.isWatchLater ? '${p.count} videos' : 'Privée · ${p.count} vidéos',
                         thumbnail: p.thumbnail,
                         icon: p.playlist.isWatchLater ? Symbols.schedule : null,
                         onTap: () => openLocalPlaylist(context, ref, p.playlist.id),
@@ -288,7 +288,7 @@ class HistoryScreen extends ConsumerWidget {
                     title: const Text("Effacer l'historique des vidéos regardées ?"),
                     content: const Text("L'historique des vidéos regardées sera effacé de cet appareil."),
                     actions: [
-                      TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
+                      TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Annuler')),
                       TextButton(onPressed: () => Navigator.pop(d, true), child: const Text("Effacer l'historique des vidéos regardées")),
                     ],
                   ),
