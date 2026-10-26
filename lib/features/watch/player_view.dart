@@ -480,7 +480,7 @@ class _AutoplaySwitch extends StatelessWidget {
   Widget build(BuildContext context) => FocusHighlight(
     radius: 24,
     child: Semantics(
-      label: 'Autoplay',
+      label: 'Lecture automatique',
       toggled: on,
       child: InkResponse(
         onTap: onTap,
@@ -598,7 +598,7 @@ class _UpNextOverlayState extends ConsumerState<_UpNextOverlay> with SingleTicke
                       animation: _ring,
                       builder: (context, _) {
                         final seconds = ((1 - _ring.value) * UpNextCountdownController.length.inSeconds).ceil();
-                        return Text('Up next in $seconds', style: white70);
+                        return Text('À suivre dans $seconds', style: white70);
                       },
                     ),
                     const SizedBox(height: 6),
@@ -622,7 +622,7 @@ class _UpNextOverlayState extends ConsumerState<_UpNextOverlay> with SingleTicke
                           child: TextButton(
                             onPressed: countdown.cancel,
                             style: TextButton.styleFrom(foregroundColor: Colors.white),
-                            child: const Text('Cancel'),
+                            child: const Text('Annuler'),
                           ),
                         ),
                         const SizedBox(width: 24),
