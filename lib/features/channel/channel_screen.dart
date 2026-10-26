@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../innertube/models.dart';
 import '../../providers.dart';
@@ -12,7 +13,7 @@ import '../../ui/widgets/html_text.dart';
 import '../../ui/widgets/video_tiles.dart';
 
 /// Tabs YouPipe can show (Posts, Store and channel search aren't supported).
-const _supportedTabs = {'Home', 'Videos', 'Shorts', 'Live', 'Releases', 'Playlists', 'Podcasts'};
+const _supportedTabs = {'Home', 'Videos', 'Shorts', 'Live', 'Releases', 'Playlists', 'Podcasts', 'Posts'};
 
 class ChannelScreen extends ConsumerWidget {
   const ChannelScreen({super.key, required this.channelId});
@@ -61,7 +62,11 @@ class ChannelScreen extends ConsumerWidget {
               ],
               body: TabBarView(
                 children: [
-                  for (final t in tabs) _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
+                  for (final t in tabs)
+                    if (t.title.toLowerCase() == 'posts' || t.title.toLowerCase() == 'publications')
+                      _ChannelPostsWebView(channelId: channelId)
+                    else
+                      _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
               ),
             ),
@@ -280,4 +285,46 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
       ),
     );
   }
+}
+
+
+/// YouTube Community posts are rendered by YouTube's own channel posts page.
+/// This keeps text, images, polls and newer post formats visible without losing them
+/// whenever YouTube changes its post renderer schema.
+class _ChannelPostsWebView extends StatefulWidget {
+  const _ChannelPostsWebView({required this.channelId});
+
+  final String channelId;
+
+  @override
+  State<_ChannelPostsWebView> createState() => _ChannelPostsWebViewState();
+}
+
+class _ChannelPostsWebViewState extends State<_ChannelPostsWebView> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (request) {
+            final uri = Uri.tryParse(request.url);
+            if (uri == null) return NavigationDecision.prevent;
+            // Keep links inside YouTube in this tab; don't let malformed URLs navigate away.
+            return uri.scheme == 'https' &&
+                    (uri.host == 'youtube.com' || uri.host.endsWith('.youtube.com') ||
+                        uri.host == 'youtu.be')
+                ? NavigationDecision.navigate
+                : NavigationDecision.prevent;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse('https://www.youtube.com/channel/${widget.channelId}/posts'));
+  }
+
+  @override
+  Widget build(BuildContext context) => WebViewWidget(controller: _controller);
 }
