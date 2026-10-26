@@ -19,7 +19,7 @@ const _labels = {
   _Filter.today: 'Today',
   _Filter.videos: 'Videos',
   _Filter.shorts: 'Shorts',
-  _Filter.continueWatching: 'Continue watching',
+  _Filter.continueWatching: 'Reprendre la lecture',
   _Filter.unwatched: 'Unwatched',
 };
 
@@ -74,10 +74,10 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
                   hasScrollBody: false,
                   child: EmptyView(
                     icon: Symbols.subscriptions,
-                    title: "Don't miss new videos",
+                    title: "Ne manquez aucune nouvelle vidéo",
                     message:
                         'Subscribe to channels to see their latest videos here. Subscriptions are kept on this device.',
-                    action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Find channels')),
+                    action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Trouver des chaînes')),
                   ),
                 )
               else ...[
@@ -97,8 +97,8 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
                     hasScrollBody: false,
                     child: EmptyView(
                       icon: Symbols.video_library,
-                      title: all.isEmpty ? 'Loading your subscriptions…' : 'Nothing here',
-                      message: all.isEmpty ? 'Pull down to refresh.' : 'Try another filter.',
+                      title: all.isEmpty ? 'Chargement de vos abonnements…' : 'Rien à afficher',
+                      message: all.isEmpty ? 'Tirez vers le bas pour actualiser.' : 'Essayez un autre filtre.',
                     ),
                   )
                 else if (_filter == _Filter.shorts)
@@ -188,13 +188,13 @@ class ChannelsScreen extends ConsumerWidget {
     final subs = ref.watch(subscriptionsProvider).value ?? const <ChannelItem>[];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All subscriptions'),
+        title: const Text('Tous les abonnements'),
         leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
         actions: [for (final a in extraActions) a(context, ref)],
       ),
       body: MaxContentWidth(
         child: subs.isEmpty
-            ? const EmptyView(icon: Symbols.subscriptions, title: 'No subscriptions yet')
+            ? const EmptyView(icon: Symbols.subscriptions, title: 'Aucun abonnement pour le moment')
             : ListView.builder(
                 itemCount: subs.length,
                 itemBuilder: (_, i) => ListTile(
