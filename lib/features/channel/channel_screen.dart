@@ -42,7 +42,7 @@ class ChannelScreen extends ConsumerWidget {
           child: Scaffold(
             body: NestedScrollView(
               headerSliverBuilder: (context, _) => [
-                SliverAppBar(
+                SliiverAppBar(
                   pinned: true,
                   title: Text(p.name),
                   leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
@@ -55,7 +55,7 @@ class ChannelScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SliverToBoxAdapter(child: _Header(page: p)),
+                SliiverToBoxAdapter(child: _Header(page: p)),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _TabBarDelegate(
@@ -68,7 +68,7 @@ class ChannelScreen extends ConsumerWidget {
                 children: [
                   for (final t in tabs)
                     if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
-                      _ChannelPostsTab(channelId: channelId, tab: t)
+                      _ChannelPostsWebTab(channelId: channelId)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
@@ -413,7 +413,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverFillRemaining(
+          SliiverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Padding(
