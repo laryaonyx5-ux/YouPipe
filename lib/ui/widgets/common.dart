@@ -338,12 +338,12 @@ class ErrorView extends StatelessWidget {
             Icon(offline ? Symbols.wifi_off : Symbols.error, size: compact ? 32 : 64, color: context.yt.textSecondary),
             const SizedBox(height: 16),
             Text(
-              offline ? 'No connection' : 'Something went wrong',
+              offline ? 'Pas de connexion' : 'Une erreur est survenue',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 6),
             Text(
-              offline ? 'Check your internet connection and try again.' : 'Tap to retry.',
+              offline ? 'Vérifiez votre connexion Internet, puis réessayez.' : 'Appuyez pour réessayer.',
               textAlign: TextAlign.center,
               style: TextStyle(color: context.yt.textSecondary),
             ),
@@ -356,7 +356,7 @@ class ErrorView extends StatelessWidget {
                   side: BorderSide(color: context.yt.divider),
                   foregroundColor: context.yt.link,
                 ),
-                child: const Text('Retry'),
+                child: const Text('Réessayer'),
               ),
             ],
           ],
