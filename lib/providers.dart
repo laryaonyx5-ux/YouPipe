@@ -562,7 +562,10 @@ class HomeChipController extends Notifier<HomeChip> {
   @override
   HomeChip build() => HomeChip.all;
 
-  void select(HomeChip chip) => state = chip;
+  void select(HomeChip chip) {
+    HomeController.touched = false;
+    state = chip;
+  }
 }
 
 final homeProvider = AsyncNotifierProvider<HomeController, HomeState>(HomeController.new);
@@ -583,13 +586,16 @@ class HomeController extends AsyncNotifier<HomeState> {
     final prefs = ref.read(prefsProvider);
     final fresh = _load(chip, prefs);
     _mixer = fresh.then((r) => r.$1)..ignore();
-    if (chip == HomeChip.all && !_cacheShown) {
+    if (chip == HomeChip.all) {
       _cacheShown = true;
       final cached = readVideoCache(prefs, _cacheKey);
       if (cached != null && cached.isNotEmpty) {
+        // Reuse the last working feed whenever the user returns to "Tout", instead of waiting on every source.
         unawaited(
           fresh.then((r) {
-            if (ref.mounted && !touched) state = AsyncData(HomeState(chip: chip, items: r.$2, hasMore: r.$1.hasMore));
+            if (ref.mounted && !touched && ref.read(homeChipProvider) == chip) {
+              state = AsyncData(HomeState(chip: chip, items: r.$2, hasMore: r.$1.hasMore));
+            }
           }, onError: (_) {}),
         );
         return HomeState(chip: chip, items: cached);
