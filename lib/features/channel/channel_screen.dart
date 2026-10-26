@@ -238,9 +238,9 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
     } else if (isShorts) {
       body = SliverPadding(
         padding: const EdgeInsets.all(4),
-        sliver: SliiverGrid.builder(
+        sliver: SliverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
-          gridDelegate: const SliiverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 9 / 16,
             mainAxisSpacing: 4,
@@ -413,7 +413,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverFillRemaining(
+          SliiverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Padding(
@@ -436,7 +436,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
       return CustomScrollView(
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [const SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('Aucune publication trouvée.')))],
+        slivers: [const SliiverFillRemaining(hasScrollBody: false, child: Center(child: Text('Aucune publication trouvée.')))],
       );
     }
     return RefreshIndicator(
@@ -457,14 +457,14 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             sliver: SliverList(
-              delegate: SliiverChildBuilderDelegate(
+              delegate: SliverChildBuilderDelegate(
                 (context, index) => _CommunityPostCard(post: _posts[index]),
                 childCount: _posts.length,
               ),
             ),
           ),
           if (_loadingMore)
-            const SliiverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+            const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
           if (_error != null)
             SliverToBoxAdapter(
               child: Center(
