@@ -11,14 +11,14 @@ import '../../ui/messenger.dart';
 
 /// SponsorBlock categories with their community-standard colours (docs/features.md).
 enum SbCategory {
-  sponsor('Sponsor', 'Paid promotion', Color(0xFF00D400), SbAction.skip),
-  selfpromo('Unpaid/self promotion', 'Merch, donations, shout-outs', Color(0xFFFFFF00), SbAction.skip),
-  interaction('Interaction reminder', '"Like and subscribe"', Color(0xFFCC00FF), SbAction.skip),
-  intro('Intermission/intro', 'Intro animations, pauses', Color(0xFF00FFFF), SbAction.show),
-  outro('Endcards/credits', 'Credits and end screens', Color(0xFF0202ED), SbAction.show),
-  preview('Preview/recap', 'Clips of what is coming or was shown', Color(0xFF008FD6), SbAction.show),
-  filler('Filler tangent', 'Off-topic jokes and tangents', Color(0xFF7300FF), SbAction.off),
-  musicOfftopic('Non-music section', 'In music videos', Color(0xFFFF9900), SbAction.skip);
+  sponsor('Sponsor', 'Promotion rémunérée', Color(0xFF00D400), SbAction.skip),
+  selfpromo('Autopromotion non rémunérée', 'Produits dérivés, dons et remerciements', Color(0xFFFFFF00), SbAction.skip),
+  interaction('Rappel d'interaction', '"Aimer et s'abonner"', Color(0xFFCC00FF), SbAction.skip),
+  intro('Intermission/intro', 'Animations d'introduction et pauses', Color(0xFF00FFFF), SbAction.show),
+  outro('Endcards/credits', 'Génériques et écrans de fin', Color(0xFF0202ED), SbAction.show),
+  preview('Preview/recap', 'Extraits de ce qui arrive ou de ce qui a été montré', Color(0xFF008FD6), SbAction.show),
+  filler('Digression de remplissage', 'Blagues et digressions hors sujet', Color(0xFF7300FF), SbAction.off),
+  musicOfftopic('Passage sans musique', 'Dans les clips musicaux', Color(0xFFFF9900), SbAction.skip);
 
   const SbCategory(this.label, this.description, this.color, this.defaultAction);
 
@@ -221,7 +221,7 @@ Widget sponsorBlockSettings(BuildContext context, WidgetRef ref) {
               items: const [
                 DropdownMenuItem(value: SbAction.skip, child: Text('Skip')),
                 DropdownMenuItem(value: SbAction.show, child: Text('Show')),
-                DropdownMenuItem(value: SbAction.off, child: Text('Off')),
+                DropdownMenuItem(value: SbAction.off, child: Text('Désactivé')),
               ],
               onChanged: (a) {
                 if (a != null) ctl.setAction(c, a);
