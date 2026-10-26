@@ -162,6 +162,7 @@ extension FeedEntries on List<FeedEntry> {
   Iterable<YtItem> get allItems => expand(
     (e) => switch (e) {
       ItemEntry(:final item) => [item],
+      PostEntry() => const <YtItem>[],
       ShelfEntry(:final items) => items,
     },
   );
