@@ -328,14 +328,14 @@ class DownloadsScreen extends ConsumerWidget {
             ? const EmptyView(
                 icon: Symbols.download,
                 title: 'Aucun téléchargement',
-                message: 'Videos you download show up here, and play without a connection.',
+                message: 'Les vidéos téléchargées apparaissent ici et peuvent être lues sans connexion.',
               )
             : ListView(
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
                     child: Text(
-                      '${all.length} video${all.length == 1 ? '' : 's'} · ${_size(used)}',
+                      '${all.length} vidéo${all.length == 1 ? '' : 's'} · ${_size(used)}',
                       style: TextStyle(color: c.textSecondary, fontSize: 13),
                     ),
                   ),
@@ -385,7 +385,7 @@ class DownloadsScreen extends ConsumerWidget {
                             DownloadState.failed => InkWell(
                               onTap: () => _retry(ref, d),
                               child: Text(
-                                'Download failed. Tap to retry',
+                                'Échec du téléchargement. Appuyez pour réessayer',
                                 style: YtText.meta.copyWith(color: YtColors.red),
                               ),
                             ),
