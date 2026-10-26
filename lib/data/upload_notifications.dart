@@ -8,9 +8,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../data/db/app_database.dart';
-import '../data/library_repository.dart';
-import '../data/subscriptions_feed.dart';
+import 'db/app_database.dart';
+import 'library_repository.dart';
+import 'subscriptions_feed.dart';
 import '../innertube/models.dart';
 
 const uploadNotificationTask = 'youpipe.checkSubscribedUploads';
@@ -127,7 +127,7 @@ class UploadNotificationService {
         for (final entry in parseRss(response.data ?? '', channelId: sub.channelId, channelName: sub.name)) {
           final id = entry.videoId.value;
           current.add(id);
-          if (hadBaseline && !seen.contains(id) && !muted.contains(sub.channelId)) {
+          if (hadBaseline && !seen.contains(id) && !muted.contains(sub.channelId) && entry.publishedAt.value.isAfter(DateTime.now().subtract(const Duration(hours: 24)))) {
             newRows.add((
               id: id,
               channelId: sub.channelId,
@@ -185,8 +185,8 @@ class UploadNotificationService {
       );
       await plugin.show(
         video.id.hashCode & 0x7fffffff,
-        video.title,
         video.channelName,
+        video.title,
         NotificationDetails(android: details),
         payload: jsonEncode({
           'id': video.id,
