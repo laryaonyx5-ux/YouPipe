@@ -3,7 +3,6 @@
 library;
 
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
-
 import 'package:flutter/material.dart' show Colors;
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -16,6 +15,8 @@ import 'features/settings/settings_screen.dart';
 import 'features/sponsorblock/sponsorblock.dart';
 import 'features/subscriptions/import_export.dart';
 import 'features/subscriptions/subscriptions_screen.dart';
+import 'features/subscriptions/upload_notification_route.dart';
+import 'features/subscriptions/upload_notification_settings.dart';
 import 'features/update/update.dart';
 import 'features/watch/player_view.dart';
 import 'features/watch/seek_bar.dart';
@@ -27,26 +28,21 @@ import 'ui/widgets/top_bar.dart';
 import 'ui/widgets/video_menu.dart';
 import 'ui/layout.dart';
 
-/// Providers watched from the app root so they're created (and hook themselves in) at startup.
 final rootProviders = <ProviderListenable<Object?>>[];
 
 void registerFeatures() {
-  // Client fixes without a release.
   rootProviders.add(remoteConfigProvider);
 
-  // SponsorBlock: skipping, the seek bar colours, and its settings.
   rootProviders.add(sbSkipperProvider);
   seekBarSegments = sbSeekBarSegments;
   settingsExtraSections.add(sponsorBlockSettings);
 
-  // Downloads: the ⋮ entry and watch-page pill, the Downloads page, and syncing with the Android jobs.
   rootProviders.add(downloadManagerProvider);
   downloadStarter = startDownload;
   downloadPillBuilder = downloadPill;
   extraDetailRoutes.add(() => GoRoute(path: 'downloads', builder: (_, _) => const DownloadsScreen()));
   youExtraEntries.add((icon: Symbols.download, label: 'Downloads', onTap: openDownloads));
 
-  // Optional Google sign-in: the You header, the login page, account lists, and syncing likes/subscriptions.
   rootProviders.add(authProvider);
   youHeaderBuilder = accountHeader;
   extraRootRoutes.add(
@@ -60,7 +56,16 @@ void registerFeatures() {
     ),
   );
 
-  // Casting to Chromecast and DLNA TVs (not from a TV: it is the big screen).
+  // Notifications from subscribed channels, with internal video opening.
+  extraRootRoutes.add(
+    GoRoute(
+      path: '/notification-video/:id',
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (_, s) => UploadNotificationVideoRoute(videoId: s.pathParameters['id']!),
+    ),
+  );
+  settingsExtraSections.add(uploadNotificationSettings);
+
   if (!DeviceInfo.current.tv) {
     rootProviders.add(castBridgeProvider);
     remoteControlsOf = castRemoteOf;
@@ -69,10 +74,7 @@ void registerFeatures() {
     topBarExtraActions.add((_) => const CastButton());
   }
 
-  // In-app updates from GitHub Releases.
   shellStartHooks.add(checkForUpdateOnLaunch);
   settingsExtraSections.add(updateSettings);
-
-  // Import / export subscriptions (Google Takeout, NewPipe).
   ChannelsScreen.extraActions.add(subscriptionsMenu);
 }
