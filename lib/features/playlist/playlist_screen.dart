@@ -208,7 +208,7 @@ class PlaylistScreen extends ConsumerWidget {
                             onTap: () async {
                               await ref.read(libraryProvider).setPlaylistSaved(p.asItem, !saved);
                               if (context.mounted) {
-                                showSnack(context, saved ? 'Removed from library' : 'Saved to library');
+                                showSnack(context, saved ? 'Removed from library" : 'Saved to library");
                               }
                             },
                           ),
@@ -257,7 +257,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
     final videos =
         (isLiked ? ref.watch(likedVideosProvider) : ref.watch(localPlaylistVideosProvider(id))).value ??
         const <VideoItem>[];
-    final title = isLiked ? 'Vidéos "J'aime"' : playlist?.name ?? '';
+    final title = isLiked ? "Vidéos \"J'aime\"" : playlist?.name ?? '';
     final userMade = !isLiked && playlist != null && !playlist.isWatchLater;
     final lib = ref.read(libraryProvider);
     void remove(VideoItem v) {
@@ -295,8 +295,8 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 }
               },
               itemBuilder: (_) => const [
-                PopupMenuItem(value: 'rename', child: Text('Rename')),
-                PopupMenuItem(value: 'delete', child: Text('Supprimer la playlist')),
+                PopupMenuItem(value: 'rename", child: Text('Rename")),
+                PopupMenuItem(value: 'delete", child: Text('Supprimer la playlist")),
               ],
             ),
         ],
@@ -310,8 +310,8 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 thumbnail: videos.firstOrNull?.thumbnailOrDefault,
                 icon: isLiked ? Symbols.thumb_up : Symbols.schedule,
                 meta: [
-                  if (userMade) 'Private' else 'Playlist',
-                  '${videos.length} video${videos.length == 1 ? '' : 's'}',
+                  if (userMade) 'Private" else 'Playlist",
+                  '${videos.length} video${videos.length == 1 ? '" : 's"}',
                 ],
                 onPlayAll: videos.isEmpty ? null : () => _playList(context, ref, videos),
                 onShuffle: videos.isEmpty ? null : () => _playList(context, ref, videos, shuffle: true),
@@ -323,7 +323,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 child: EmptyView(
                   icon: isLiked ? Symbols.thumb_up : Symbols.video_library,
                   title: 'Cette playlist ne contient pas encore de vidéos',
-                  message: isLiked ? 'Les vidéos que vous aimez apparaîtront ici' : 'Enregistrez des vidéos depuis leur menu ⋮',
+                  message: isLiked ? 'Les vidéos que vous aimez apparaîtront ici" : 'Enregistrez des vidéos depuis leur menu ⋮",
                 ),
               )
             else if (userMade || playlist?.isWatchLater == true)
