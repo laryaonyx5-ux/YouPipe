@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../innertube/models.dart';
 import '../../providers.dart';
@@ -67,7 +68,7 @@ class ChannelScreen extends ConsumerWidget {
                 children: [
                   for (final t in tabs)
                     if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
-                      _ChannelPostsTab(channelId: channelId, tab: t)
+                      _ChannelPostsWebTab(channelId: channelId)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
@@ -560,6 +561,118 @@ class _CommunityPostCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+/// Fallback for channels whose native community feed is incomplete.
+/// Keep YouTube's community page inside this tab, while hiding its own bottom
+/// navigation and subscription controls so the app's navigation stays in charge.
+class _ChannelPostsWebTab extends StatefulWidget {
+  const _ChannelPostsWebTab({required this.channelId});
+
+  final String channelId;
+
+  @override
+  State<_ChannelPostsWebTab> createState() => _ChannelPostsWebTabState();
+}
+
+class _ChannelPostsWebTabState extends State<_ChannelPostsWebTab> {
+  late final WebViewController _controller;
+  bool _loading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFF0F0F0F))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (_) async {
+            await _controller.runJavaScript('''
+              (() => {
+                const styleId = 'youpipe-community-cleanup';
+                let style = document.getElementById(styleId);
+                if (!style) {
+                  style = document.createElement('style');
+                  style.id = styleId;
+                  document.head.appendChild(style);
+                }
+                style.textContent = `
+                  ytm-pivot-bar-renderer,
+                  .pivot-bar-renderer,
+                  ytd-mini-guide-renderer,
+                  ytd-guide-renderer,
+                  tp-yt-app-drawer,
+                  #guide-button,
+                  ytm-subscribe-button-renderer,
+                  ytd-subscribe-button-renderer,
+                  ytm-slim-owner-renderer .subscribe-button,
+                  ytm-channel-header-renderer .subscribe-button,
+                  button[aria-label="Subscribe"],
+                  button[aria-label="S’abonner"],
+                  a[aria-label="Subscribe"],
+                  a[aria-label="S’abonner"] {
+                    display: none !important;
+                    visibility: hidden !important;
+                    height: 0 !important;
+                    min-height: 0 !important;
+                  }
+                  html, body { overflow-y: auto !important; }
+                `;
+                document.documentElement.style.overflowY = 'auto';
+                document.body.style.overflowY = 'auto';
+              })();
+            ''');
+            if (mounted) setState(() { _loading = false; _error = null; });
+          },
+          onWebResourceError: (error) {
+            if (error.isForMainFrame == true && mounted) {
+              setState(() { _loading = false; _error = error.description; });
+            }
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse('https://www.youtube.com/channel/${widget.channelId}/community'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_error != null && _loading) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Impossible d’ouvrir les publications YouTube.'),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () {
+                  setState(() { _loading = true; _error = null; });
+                  _controller.loadRequest(Uri.parse('https://www.youtube.com/channel/${widget.channelId}/community'));
+                },
+                child: const Text('Réessayer'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    return Stack(
+      children: [
+        WebViewWidget(controller: _controller),
+        if (_loading)
+          const Positioned.fill(
+            child: ColoredBox(
+              color: Color(0xFF0F0F0F),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ),
+      ],
     );
   }
 }
