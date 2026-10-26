@@ -58,7 +58,7 @@ class AuthController extends AsyncNotifier<AuthState> {
       final Future<void> call = switch (action) {
         'like' => _yt.like(id, liked: on),
         'subscribe' => _yt.subscribe(id, subscribe: on),
-        'watchLater" => _yt.editPlaylist('WL", id, add: on),
+        'watchLater' => _yt.editPlaylist('WL', id, add: on),
         _ => Future.value(),
       };
       call.catchError((Object e) => debugPrint('YouPipe: account sync $action failed: $e'));
@@ -67,7 +67,7 @@ class AuthController extends AsyncNotifier<AuthState> {
 
   /// Reads the WebView cookie jar once the login page lands on youtube.com. False if not signed in yet.
   Future<bool> completeSignIn() async {
-    final cookie = await _cookies.invokeMethod<String>('get", {'url": 'https://www.youtube.com'});
+    final cookie = await _cookies.invokeMethod<String>('get', {'url': 'https://www.youtube.com'});
     if (cookie == null || !isSignedInCookie(cookie)) return false;
     await _storage.write(key: _cookieKey, value: cookie);
     _yt.cookie = cookie;
@@ -119,7 +119,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _onPageFinished(String url) async {
     final host = Uri.tryParse(url)?.host ?? '';
-    if (_finishing || !(host == 'www.youtube.com" || host == 'm.youtube.com")) return;
+    if (_finishing || !(host == 'www.youtube.com' || host == 'm.youtube.com')) return;
     _finishing = true;
     final ok = await ref.read(authProvider.notifier).completeSignIn();
     if (!mounted) return;
@@ -235,12 +235,12 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ListTile(
         leading: const Icon(Symbols.history, weight: 300),
         title: const Text('Historique YouTube'),
-        onTap: () => open('FEhistory", 'Historique YouTube"),
+        onTap: () => open('FEhistory', 'Historique YouTube'),
       ),
       ListTile(
         leading: const Icon(Symbols.video_library, weight: 300),
         title: const Text('Playlists YouTube'),
-        onTap: () => open('FEplaylist_aggregation", 'Playlists"),
+        onTap: () => open('FEplaylist_aggregation', 'Playlists'),
       ),
       ListTile(
         leading: const Icon(Symbols.schedule, weight: 300),
@@ -249,7 +249,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ),
       ListTile(
         leading: const Icon(Symbols.thumb_up, weight: 300),
-        title: const Text("Vidéos \"J'aime\""),
+        title: const Text('Vidéos "J'aime"'),
         onTap: () => openPlaylist(context, ref, 'LL'),
       ),
       ListTile(
@@ -281,7 +281,7 @@ Future<void> _importAccountSubscriptions(BuildContext context, WidgetRef ref) as
         context,
         channels.isEmpty
             ? 'Your YouTube account has no subscriptions'
-            : 'Imported ${channels.length} subscription${channels.length == 1 ? '" : 's"}',
+            : 'Imported ${channels.length} subscription${channels.length == 1 ? '' : 's'}',
       );
     }
   } catch (e, st) {
