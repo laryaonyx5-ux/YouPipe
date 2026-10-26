@@ -33,7 +33,9 @@ class ChannelScreen extends ConsumerWidget {
         ref.read(libraryProvider).refreshSubscription(p.asItem);
         final supportedTabs = p.tabs.where((t) => _supportedTabs.contains(t.title)).toList();
         // Never create a zero-tab controller: some YouTube locales use labels we do not recognize yet.
-        final tabs = supportedTabs.isNotEmpty ? supportedTabs : p.tabs.take(1).toList();
+        final tabs = supportedTabs.isNotEmpty
+            ? supportedTabs
+            : (p.tabs.isNotEmpty ? p.tabs.take(1).toList() : const [ChannelTab('Vidéos', null, selected: true)]);
         return DefaultTabController(
           length: tabs.length,
           child: Scaffold(
@@ -399,12 +401,16 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const CustomScrollView(
-        slivers: [SliverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator()))],
+      return CustomScrollView(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [const SliverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator()))],
       );
     }
     if (_error != null && _posts.isEmpty) {
       return CustomScrollView(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverFillRemaining(
             hasScrollBody: false,
@@ -426,8 +432,10 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
       );
     }
     if (_posts.isEmpty) {
-      return const CustomScrollView(
-        slivers: [SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('Aucune publication trouvée.')))],
+      return CustomScrollView(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [const SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('Aucune publication trouvée.')))],
       );
     }
     return RefreshIndicator(
