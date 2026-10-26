@@ -55,7 +55,7 @@ class ChannelScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SliiverToBoxAdapter(child: _Header(page: p)),
+                SliverToBoxAdapter(child: _Header(page: p)),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _TabBarDelegate(
