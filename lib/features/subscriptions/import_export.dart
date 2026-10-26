@@ -87,7 +87,7 @@ Future<void> importSubscriptions(BuildContext context, WidgetRef ref) async {
   }
   await ref.read(libraryProvider).importSubscriptions(channels);
   await ref.read(subscriptionsFeedServiceProvider).refresh(force: true);
-  if (context.mounted) showSnack(context, 'Imported ${channels.length} subscriptions');
+  if (context.mounted) showSnack(context, '${channels.length} abonnements importés');
 }
 
 Future<void> exportSubscriptionsFile(BuildContext context, WidgetRef ref) async {
@@ -98,7 +98,7 @@ Future<void> exportSubscriptionsFile(BuildContext context, WidgetRef ref) async 
     bytes: bytes,
     mimeType: 'application/json',
   );
-  if (context.mounted && uri != null) showSnack(context, 'Exported ${channels.length} subscriptions');
+  if (context.mounted && uri != null) showSnack(context, '${channels.length} abonnements exportés');
 }
 
 /// The ⋮ on All subscriptions.
