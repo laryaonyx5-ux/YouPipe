@@ -595,7 +595,7 @@ class PlaylistThumb extends StatelessWidget {
                     const SizedBox(width: 2),
                     // "12 videos" → "12"; an empty playlist's "Aucune vidéo" → "0".
                     Text(
-                      count!.startsWith('No ') ? '0' : count!.replaceAll(' videos', '').replaceAll(' video', ''),
+                      count!.startsWith('No ') ? '0' : count!.replaceAll(' vidéos', '').replaceAll(' vidéo', ''),
                       style: YtText.badge,
                     ),
                   ],
