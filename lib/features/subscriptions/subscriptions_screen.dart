@@ -213,33 +213,100 @@ class _ChannelStrip extends ConsumerWidget {
   );
 }
 
-/// All subscriptions, A–Z, with Subscribe toggles.
-class ChannelsScreen extends ConsumerWidget {
+/// All subscriptions, A–Z. Import the signed-in account again when this screen opens.
+class ChannelsScreen extends ConsumerStatefulWidget {
   const ChannelsScreen({super.key});
 
   static final extraActions = <Widget Function(BuildContext, WidgetRef)>[];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ChannelsScreen> createState() => _ChannelsScreenState();
+}
+
+class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
+  bool _syncing = true;
+  String? _syncError;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_refreshChannels());
+  }
+
+  Future<void> _refreshChannels() async {
+    try {
+      await ref.read(authProvider.future);
+      final yt = ref.read(innerTubeProvider);
+      if (yt.signedIn) {
+        var page = await yt.subscribedChannels();
+        final channels = <String, ChannelItem>{
+          for (final channel in page.entries.allItems.whereType<ChannelItem>()) channel.id: channel,
+        };
+        while (page.continuation != null && channels.length < 5000) {
+          page = await yt.browseContinuation(page.continuation!);
+          final more = page.entries.allItems.whereType<ChannelItem>();
+          if (more.isEmpty) break;
+          for (final channel in more) {
+            channels[channel.id] = channel;
+          }
+        }
+        if (channels.isNotEmpty) {
+          await ref.read(libraryProvider).importSubscriptions(channels.values.toList());
+        }
+      }
+      await ref.read(subscriptionsFeedServiceProvider).refresh(force: true);
+    } catch (e) {
+      _syncError = e.toString();
+      debugPrint('YouPipe: unable to refresh all subscriptions: $e');
+    } finally {
+      if (mounted) setState(() => _syncing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final subs = ref.watch(subscriptionsProvider).value ?? const <ChannelItem>[];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tous les abonnements'),
         leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
-        actions: [for (final a in extraActions) a(context, ref)],
+        actions: [
+          IconButton(
+            tooltip: 'Actualiser',
+            onPressed: _syncing ? null : () => setState(() {
+              _syncing = true;
+              _syncError = null;
+              unawaited(_refreshChannels());
+            }),
+            icon: const Icon(Symbols.refresh),
+          ),
+          for (final a in ChannelsScreen.extraActions) a(context, ref),
+        ],
       ),
       body: MaxContentWidth(
-        child: subs.isEmpty
-            ? const EmptyView(icon: Symbols.subscriptions, title: 'Aucun abonnement pour le moment')
-            : ListView.builder(
-                itemCount: subs.length,
-                itemBuilder: (_, i) => ListTile(
-                  leading: Avatar(subs[i].avatar, size: 40, name: subs[i].name),
-                  title: Text(subs[i].name),
-                  onTap: () => openChannel(context, ref, subs[i].id),
-                  trailing: SubscribeButton(subs[i], compact: true),
-                ),
-              ),
+        child: _syncing && subs.isEmpty
+            ? const Center(child: CircularProgressIndicator())
+            : subs.isEmpty
+                ? EmptyView(
+                    icon: Symbols.subscriptions,
+                    title: 'Aucun abonnement trouvé',
+                    message: _syncError == null
+                        ? 'Connecte-toi à ton compte YouTube ou recherche des chaînes pour les ajouter.'
+                        : 'Impossible de charger les abonnements. Vérifie ta connexion puis actualise.',
+                  )
+                : RefreshIndicator(
+                    onRefresh: _refreshChannels,
+                    child: ListView.builder(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: subs.length,
+                      itemBuilder: (_, i) => ListTile(
+                        leading: Avatar(subs[i].avatar, size: 48, name: subs[i].name),
+                        title: Text(subs[i].name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        onTap: () => openChannel(context, ref, subs[i].id),
+                        trailing: SubscribeButton(subs[i], compact: true),
+                      ),
+                    ),
+                  ),
       ),
     );
   }
