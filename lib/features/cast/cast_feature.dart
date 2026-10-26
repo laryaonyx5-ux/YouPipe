@@ -59,7 +59,7 @@ final castBridgeProvider = Provider<void>((ref) {
       );
     } catch (e) {
       loadedId = null;
-      showGlobalSnack("Couldn't cast this video");
+      showGlobalSnack("Impossible de diffuser cette vidéo");
     }
   }
 
