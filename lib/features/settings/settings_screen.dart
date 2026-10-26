@@ -80,13 +80,13 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('Apparence'),
               subtitle: Text(switch (s.themeMode) {
-                ThemeMode.system => 'Utiliser le thème de l'appareil',
+                ThemeMode.system => "Utiliser le thème de l'appareil",
                 ThemeMode.dark => 'Thème sombre',
                 ThemeMode.light => 'Thème clair',
               }),
               onTap: () async {
                 final m = await pick('Apparence', {
-                  ThemeMode.system: 'Utiliser le thème de l'appareil',
+                  ThemeMode.system: "Utiliser le thème de l'appareil",
                   ThemeMode.dark: 'Thème sombre',
                   ThemeMode.light: 'Thème clair',
                 }, s.themeMode);

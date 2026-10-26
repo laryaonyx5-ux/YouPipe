@@ -34,7 +34,7 @@ class _UpdateSheet extends ConsumerWidget {
         value: progress,
         onCancel: controller.cancelDownload,
       ),
-      UpdateInstalling() => const _Progress(label: 'Ouverture du programme d'installation…'),
+      UpdateInstalling() => const _Progress(label: "Ouverture du programme d'installation…"),
       UpdateFailed(:final error) => _Failure(
         error: error,
         onRetry: () => controller.downloadAndInstall(update),
@@ -156,8 +156,8 @@ class _Failure extends StatelessWidget {
     'NETWORK' => 'Impossible de télécharger la mise à jour. Vérifiez votre connexion et réessayez.',
     'HASH_MISMATCH' => 'Le téléchargement est endommagé. Réessayez.',
     'SIGNATURE_MISMATCH' =>
-      'Cette version de YouPipe provient d'une compilation différente ; Android ne peut pas la mettre à jour. '
-          'Désinstallez l'application, puis installez la dernière version depuis GitHub.',
+      "Cette version de YouPipe provient d'une compilation différente ; Android ne peut pas la mettre à jour. "
+          "Désinstallez l'application, puis installez la dernière version depuis GitHub.",
     'DOWNGRADE' => 'La version installée est plus récente que cette version.',
     _ => "The update couldn't be installed (${error.message}).",
   };

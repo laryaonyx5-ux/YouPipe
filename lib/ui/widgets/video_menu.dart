@@ -45,7 +45,7 @@ Future<void> showVideoMenu(
           if (playing && !video.isShort)
             _MenuTile(
               icon: Symbols.queue_play_next,
-              label: 'Lire ensuite dans la file d'attente',
+              label: "Lire ensuite dans la file d'attente",
               onTap: () {
                 close();
                 ref.read(playbackProvider.notifier).playNext(video);

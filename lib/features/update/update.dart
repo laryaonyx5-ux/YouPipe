@@ -171,7 +171,7 @@ Widget updateSettings(BuildContext context, WidgetRef ref) {
         ),
         SwitchListTile(
           title: const Text('Rechercher automatiquement les mises à jour'),
-          subtitle: const Text('Recherche une nouvelle version sur GitHub à l'ouverture de l'application'),
+          subtitle: const Text("Recherche une nouvelle version sur GitHub à l'ouverture de l'application"),
           value: prefs.getBool('autoUpdateCheck') ?? true,
           onChanged: (v) async {
             await prefs.setBool('autoUpdateCheck', v);
