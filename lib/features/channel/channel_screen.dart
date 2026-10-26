@@ -220,7 +220,7 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
           padding: const EdgeInsets.all(32),
           child: Center(
             child: Text(
-              'This channel has no ${widget.tab.title.toLowerCase()}',
+              'Cette chaîne ne contient aucun élément dans la section ${widget.tab.title.toLowerCase()}',
               style: TextStyle(color: context.yt.textSecondary),
             ),
           ),
