@@ -149,6 +149,15 @@ class InnerTube {
   Future<FeedPage> browseContinuation(String token) async =>
       parseFeedPage(await _post('browse', {'continuation': token}));
 
+  /// Native Community posts for a channel's Posts tab (no embedded website).
+  Future<CommunityPostsPage> channelPosts(String channelId, {required String params}) async =>
+      parseCommunityPosts(await _post('browse', {'browseId': channelId, 'params': params}));
+
+  /// The next page of native Community posts.
+  Future<CommunityPostsPage> channelPostsContinuation(String token) async =>
+      parseCommunityPosts(await _post('browse', {'continuation': token}));
+
+
   Future<PlaylistPage> playlist(String playlistId) async =>
       parsePlaylist(await _post('browse', {'browseId': 'VL$playlistId'}), playlistId);
 
