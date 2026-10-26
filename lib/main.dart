@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'data/db/app_database.dart';
 import 'data/library_repository.dart';
 import 'data/video_info.dart';
+import 'data/upload_notifications.dart';
 import 'features.dart';
 import 'features/watch/player_view.dart';
 import 'innertube/innertube.dart';
@@ -72,6 +73,10 @@ Future<void> main() async {
   }, onError: (_) {});
 
   final db = AppDatabase();
+  // Native upload notifications use the same local subscriptions and Watch later library.
+  unawaited(uploadNotifications.initialize().catchError((Object e) {
+    debugPrint('YouPipe: upload notifications could not initialize: $e');
+  }));
   // YouTube always shows Watch later, even when empty.
   unawaited(LibraryRepository(db).watchLaterId());
 
@@ -100,6 +105,27 @@ class YouPipeApp extends ConsumerStatefulWidget {
 
 class _YouPipeAppState extends ConsumerState<YouPipeApp> {
   final _router = buildRouter();
+
+  @override
+  void initState() {
+    super.initState();
+    UploadNotificationService.onOpenVideo = (video) {
+      _router.go('/home');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        ref.read(playerPanelProvider.notifier).expand();
+        unawaited(ref.read(playbackProvider.notifier).play(video));
+      });
+    };
+    final pending = UploadNotificationService.pendingVideo;
+    if (pending != null) {
+      UploadNotificationService.pendingVideo = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        UploadNotificationService.onOpenVideo?.call(pending);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
