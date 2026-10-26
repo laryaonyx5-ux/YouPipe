@@ -42,6 +42,8 @@ class AuthController extends AsyncNotifier<AuthState> {
     _yt.cookie = cookie;
     _hookSync();
     if (!_yt.signedIn) return const AuthState();
+    // Keep the local Subscriptions tab in sync automatically after app launch.
+    unawaited(_syncAccountSubscriptions());
     try {
       return AuthState(signedIn: true, account: await _yt.accountInfo());
     } catch (e) {
@@ -74,7 +76,41 @@ class AuthController extends AsyncNotifier<AuthState> {
     final account = await _yt.accountInfo().catchError((Object _) => null);
     state = AsyncData(AuthState(signedIn: true, account: account));
     ref.invalidate(homeProvider);
+    // Import the user's existing YouTube subscriptions without asking them to subscribe again.
+    unawaited(_syncAccountSubscriptions());
     return true;
+  }
+
+  bool _syncingSubscriptions = false;
+
+  /// Imports every channel already subscribed to on YouTube into YouPipe's local Subscriptions list.
+  /// Existing local subscriptions are preserved; this never unsubscribes or deletes anything.
+  Future<void> _syncAccountSubscriptions() async {
+    if (_syncingSubscriptions || !_yt.signedIn) return;
+    _syncingSubscriptions = true;
+    try {
+      var page = await _yt.subscribedChannels();
+      final channelsById = <String, ChannelItem>{
+        for (final channel in page.entries.allItems.whereType<ChannelItem>()) channel.id: channel,
+      };
+      while (page.continuation != null && channelsById.length < 5000) {
+        page = await _yt.browseContinuation(page.continuation!);
+        final more = page.entries.allItems.whereType<ChannelItem>().toList();
+        if (more.isEmpty) break;
+        for (final channel in more) {
+          channelsById[channel.id] = channel;
+        }
+      }
+      if (channelsById.isEmpty) return;
+      await ref.read(libraryProvider).importSubscriptions(channelsById.values.toList());
+      unawaited(ref.read(subscriptionsFeedServiceProvider).refresh(force: true));
+      debugPrint('YouPipe: automatically synced ${channelsById.length} YouTube subscriptions');
+    } catch (e, st) {
+      // A temporary network failure must not prevent sign-in or access to the local library.
+      debugPrint('YouPipe: automatic subscription sync failed: $e\\n$st');
+    } finally {
+      _syncingSubscriptions = false;
+    }
   }
 
   Future<void> signOut() async {
