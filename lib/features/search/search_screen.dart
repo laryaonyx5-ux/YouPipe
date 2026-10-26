@@ -85,8 +85,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           title: Text(text),
                           content: const Text('Supprimer de l'historique de recherche ?'),
                           actions: [
-                            TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
-                            TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Remove')),
+                            TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Annuler')),
+                            TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Retirer')),
                           ],
                         ),
                       );
