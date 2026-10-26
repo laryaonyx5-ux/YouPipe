@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../innertube/models.dart';
 import '../../providers.dart';
@@ -68,7 +67,7 @@ class ChannelScreen extends ConsumerWidget {
                 children: [
                   for (final t in tabs)
                     if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
-                      _ChannelPostsWebTab(channelId: channelId)
+                      _ChannelPostsTab(channelId: channelId, tab: t)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
