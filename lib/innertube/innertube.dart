@@ -35,7 +35,7 @@ enum SearchFilter {
 
 /// YouTube (www.youtube.com) InnerTube client for browse/search/next/reel. Pure Dart, no Flutter imports.
 class InnerTube {
-  InnerTube({Dio? dio, this.hl = 'en', this.gl = 'US', this.visitorData})
+  InnerTube({Dio? dio, this.hl = 'fr', this.gl = 'FR', this.visitorData})
     : _dio =
           dio ??
           Dio(BaseOptions(connectTimeout: const Duration(seconds: 15), receiveTimeout: const Duration(seconds: 20)));
