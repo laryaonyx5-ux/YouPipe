@@ -649,6 +649,50 @@ CommunityPostsPage parseCommunityPosts(Json data) {
     return found;
   }
 
+  String? firstImage(Object? root, Set<String> keys) {
+    String? found;
+    void walk(Object? value) {
+      if (found != null) return;
+      if (value is Map) {
+        for (final entry in value.entries) {
+          if (keys.contains(entry.key.toString())) {
+            if (entry.value is String) {
+              found = _https(entry.value as String);
+              return;
+            }
+            final thumbs = navList(entry.value, ['thumbnails']);
+            if (thumbs.isNotEmpty) {
+              final url = thumbs.last['url'];
+              if (url is String) {
+                found = _https(url);
+                return;
+              }
+            }
+            final sources = navList(entry.value, ['sources']);
+            if (sources.isNotEmpty) {
+              final url = sources.last['url'];
+              if (url is String) {
+                found = _https(url);
+                return;
+              }
+            }
+          }
+        }
+        for (final entry in value.entries) {
+          walk(entry.value);
+          if (found != null) return;
+        }
+      } else if (value is List) {
+        for (final item in value) {
+          walk(item);
+          if (found != null) return;
+        }
+      }
+    }
+    walk(root);
+    return found;
+  }
+
   List<String> imagesOf(Object? root) {
     final urls = <String>[];
     void walk(Object? value, {bool inAttachment = false}) {
@@ -717,7 +761,7 @@ CommunityPostsPage parseCommunityPosts(Json data) {
       id: id,
       text: text,
       author: firstText(root, {'authorText', 'authorName', 'displayName'}),
-      authorAvatar: _https(firstText(root, {'authorThumbnail', 'avatarUrl'})),
+      authorAvatar: firstImage(root, {'authorThumbnail', 'avatar', 'avatarViewModel', 'authorAvatar', 'avatarUrl'}),
       publishedText: firstText(root, {'publishedTimeText', 'publishedTime', 'timestampText'}),
       images: images,
       pollOptions: pollOptionsOf(root),
