@@ -91,7 +91,7 @@ class DownloadManager {
   }
 
   Future<void> remove(String videoId) async {
-    await _channel.invokeMethod('cancel", {'videoId": videoId});
+    await _channel.invokeMethod('cancel', {'videoId': videoId});
     final row = await (_db.select(_db.downloads)..where((d) => d.videoId.equals(videoId))).getSingleOrNull();
     if (row?.path != null) {
       final f = File(row!.path!);
@@ -134,13 +134,13 @@ class DownloadManager {
           downloadedBytes: Value((j['size'] as num?)?.toInt() ?? 0),
           height: Value((j['height'] as num?)?.toInt() ?? row.height),
         ),
-        'failed" => DownloadsCompanion(state: const Value(DownloadState.failed), error: Value(j['error"] as String?)),
+        'failed' => DownloadsCompanion(state: const Value(DownloadState.failed), error: Value(j['error'] as String?)),
         _ => null,
       };
       if (update == null) continue;
       await (_db.update(_db.downloads)..where((d) => d.videoId.equals(id))).write(update);
-      if (j['state"] == 'queued" || j['state"] == 'downloading") active = true;
-      if (j['state"] == 'done" && row.state != DownloadState.done) {
+      if (j['state'] == 'queued' || j['state'] == 'downloading') active = true;
+      if (j['state'] == 'done' && row.state != DownloadState.done) {
         finished = true;
         final title = (await (_db.select(_db.videos)..where((v) => v.videoId.equals(id))).getSingleOrNull())?.title;
         showGlobalSnack('Downloaded${title == null ? '' : ': $title'}');
@@ -198,7 +198,7 @@ String _qualityName(int h) => switch (h) {
   _ => 'Low',
 };
 
-/// The ⋮ menu"s / watch page's \"Download\": YouTube"s quality sheet with real sizes, then the job.
+/// The ⋮ menu's / watch page's "Download": YouTube's quality sheet with real sizes, then the job.
 Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video) async {
   final existing = ref.read(downloadOfProvider(video.id));
   if (existing != null) {
@@ -206,7 +206,7 @@ Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video)
     return;
   }
   // Ask for notifications (Android 13+) so the progress shows.
-  unawaited(const MethodChannel('youpipe/system").invokeMethod('requestNotifications"));
+  unawaited(const MethodChannel('youpipe/system').invokeMethod('requestNotifications'));
   final infoFuture = ref.read(videoInfoServiceProvider).get(video.id);
   final height = await showModalBottomSheet<int>(
     context: context,
@@ -252,7 +252,7 @@ Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video)
   );
   if (height == null) return;
   await ref.read(downloadManagerProvider).start(video, height);
-  if (context.mounted) showSnack(context, 'Téléchargement…", action: 'Voir", onAction: () => openDownloads(context, ref));
+  if (context.mounted) showSnack(context, 'Téléchargement…', action: 'Voir', onAction: () => openDownloads(context, ref));
 }
 
 Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) => showModalBottomSheet<void>(
@@ -273,7 +273,7 @@ Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) =
           ),
         ListTile(
           leading: const Icon(Symbols.delete),
-          title: Text(d.row.state == DownloadState.done ? 'Supprimer des téléchargements" : 'Annuler le téléchargement"),
+          title: Text(d.row.state == DownloadState.done ? 'Supprimer des téléchargements' : 'Annuler le téléchargement'),
           onTap: () {
             Navigator.of(sheet).pop();
             ref.read(downloadManagerProvider).remove(d.video.id);
@@ -335,7 +335,7 @@ class DownloadsScreen extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
                     child: Text(
-                      '${all.length} video${all.length == 1 ? '" : 's"} · ${_size(used)}',
+                      '${all.length} video${all.length == 1 ? '' : 's'} · ${_size(used)}',
                       style: TextStyle(color: c.textSecondary, fontSize: 13),
                     ),
                   ),
