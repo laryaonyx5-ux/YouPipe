@@ -235,7 +235,7 @@ class _Actions extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          PillButton(icon: Symbols.share, label: 'Share', onTap: () => shareVideo(video)),
+          PillButton(icon: Symbols.share, label: 'Partager', onTap: () => shareVideo(video)),
           const SizedBox(width: 8),
           if (downloadStarter != null && !video.isLive) ...[
             downloadPillBuilder?.call(context, ref, video) ??
