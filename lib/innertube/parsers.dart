@@ -250,7 +250,7 @@ YtItem? _video(Json v) {
     viewsText: views == null ? (info.firstOrNull == null ? null : localizeViewsText(info.firstOrNull!)) : localizeViewsText(views),
     publishedText: (textOf(v['publishedTimeText']) ?? (info.length > 1 ? info.last : null)) == null
         ? null
-        : localizeRelativeText(longAge(textOf(v['publishedTimeText']) ?? info.last)),
+        : localizeRelativeText(longAge(textOf(v['publishedTimeText']) ?? (info.length > 1 ? info.last : ''))),
     isLive: live,
   );
 }
