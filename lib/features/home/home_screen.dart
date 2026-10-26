@@ -127,7 +127,7 @@ class _StartCard extends ConsumerWidget {
         const Text('Votre fil, sur cet appareil', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 6),
         Text(
-          'YouPipe builds Home from what you watch and the channels you subscribe to, all stored on this device. '
+          'YouPipe construit votre accueil à partir de vos vidéos et des chaînes auxquelles vous êtes abonné. Tout est conservé sur cet appareil. '
           'En attendant, voici des vidéos populaires.',
           style: TextStyle(color: context.yt.textSecondary, fontSize: 13),
         ),
