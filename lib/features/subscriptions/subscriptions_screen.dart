@@ -15,7 +15,7 @@ import '../../ui/widgets/video_tiles.dart';
 enum _Filter { all, today, videos, shorts, continueWatching, unwatched }
 
 const _labels = {
-  _Filter.all: 'All',
+  _Filter.all: 'Tout',
   _Filter.today: 'Today',
   _Filter.videos: 'Videos',
   _Filter.shorts: 'Shorts',
@@ -76,7 +76,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
                     icon: Symbols.subscriptions,
                     title: "Ne manquez aucune nouvelle vidéo",
                     message:
-                        'Subscribe to channels to see their latest videos here. Subscriptions are kept on this device.',
+                        'Abonnez-vous à des chaînes pour voir leurs dernières vidéos ici. Vos abonnements sont conservés sur cet appareil.',
                     action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Trouver des chaînes')),
                   ),
                 )
@@ -129,7 +129,7 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
   }
 }
 
-/// The row of channel avatars with "All" at the end.
+/// The row of channel avatars with "Tout" at the end.
 class _ChannelStrip extends ConsumerWidget {
   const _ChannelStrip({required this.channels});
 
@@ -170,7 +170,7 @@ class _ChannelStrip extends ConsumerWidget {
         TextButton(
           onPressed: () => context.push('${branchPrefix(context)}/channels'),
           style: TextButton.styleFrom(foregroundColor: context.yt.link),
-          child: const Text('All', style: TextStyle(fontWeight: FontWeight.w500)),
+          child: const Text('Tout', style: TextStyle(fontWeight: FontWeight.w500)),
         ),
       ],
     ),
