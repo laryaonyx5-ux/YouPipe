@@ -310,8 +310,8 @@ YtItem? _lockup(Json v) {
     channelAvatar: avatar,
     thumbnail: _bestImage(nav(image, ['image'])),
     durationText: duration,
-    viewsText: views,
-    publishedText: age,
+    viewsText: views == null ? null : localizeViewsText(views),
+    publishedText: age == null ? null : localizeRelativeText(age),
     isLive: duration == null && badges.any((b) => b.toUpperCase() == 'LIVE'),
   );
 }
