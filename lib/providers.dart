@@ -571,9 +571,6 @@ class HomeChipController extends Notifier<HomeChip> {
 final homeProvider = AsyncNotifierProvider<HomeController, HomeState>(HomeController.new);
 
 class HomeController extends AsyncNotifier<HomeState> {
-  /// The cached first page is shown once per launch, while the fresh mix loads (docs/data.md).
-  static bool _cacheShown = false;
-
   /// Set once the user touches Home. After that a fresh feed no longer replaces the cached one, so a tap never
   /// lands on a video that just changed under the finger.
   static bool touched = false;
@@ -587,7 +584,6 @@ class HomeController extends AsyncNotifier<HomeState> {
     final fresh = _load(chip, prefs);
     _mixer = fresh.then((r) => r.$1)..ignore();
     if (chip == HomeChip.all) {
-      _cacheShown = true;
       final cached = readVideoCache(prefs, _cacheKey);
       if (cached != null && cached.isNotEmpty) {
         // Reuse the last working feed whenever the user returns to "Tout", instead of waiting on every source.
