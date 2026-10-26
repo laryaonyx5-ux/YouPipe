@@ -601,13 +601,14 @@ class HomeController extends AsyncNotifier<HomeState> {
     return HomeState(chip: chip, items: items, hasMore: mixer.hasMore);
   }
 
-  static const _cacheKey = 'homeCache';
+  static const _cacheKey = 'homeSubscriptionsCache';
 
   Future<(HomeMixer, List<VideoItem>)> _load(HomeChip chip, SharedPreferences prefs) async {
     final yt = ref.read(innerTubeProvider);
     await yt.ensureVisitorData().catchError((_) => null);
     final subs = ref.read(subscriptionsFeedServiceProvider);
-    unawaited(subs.refresh());
+    // Wait for the RSS refresh so "Tout" doesn't read an empty feed before uploads arrive.
+    await subs.refresh();
     final mixer = await HomeMixer.create(
       chip: chip,
       yt: yt,
