@@ -199,19 +199,13 @@ class HomeMixer {
       case HomeChipKind.subscriptions:
         sources.add(_ListSource(recentUploads));
       case HomeChipKind.all:
-        if (yt.signedIn) sources.add(_AccountHomeSource(yt));
-        final seeds = [
-          for (final h in history)
-            if (!h.video.isShort) h.video.id,
-        ].take(6);
-        sources.addAll([for (final s in seeds) _RelatedSource(yt, s)]);
-        if (recentUploads.isNotEmpty) sources.insert(sources.isEmpty ? 0 : 1, _ListSource(recentUploads));
-        // Something to discover even with history; the whole feed when there's nothing personal yet.
-        final personal = sources.isNotEmpty;
-        final topics = [..._discover]..shuffle();
-        for (final q in topics.take(personal ? 1 : 4)) {
-          sources.add(_SearchSource(yt, q, weight: personal ? 1 : 2));
-        }
+        // "Tout" is a combined feed of uploads from the channels the user subscribed to.
+        // Never fill this tab with popular videos, topic searches, or recommendations.
+        final subscribedUploads = [
+          for (final f in subscriptionFeed)
+            if (!f.video.isShort) f.video,
+        ];
+        sources.add(_ListSource(subscribedUploads));
     }
     final mixer = HomeMixer._(sources, finished);
     // Start every source at once so the first page arrives as fast as the slowest single request.
