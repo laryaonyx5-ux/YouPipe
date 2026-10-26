@@ -250,8 +250,16 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
         final channels = <String, ChannelItem>{
           for (final channel in page.entries.allItems.whereType<ChannelItem>()) channel.id: channel,
         };
-        while (page.continuation != null && channels.length < 5000) {
-          page = await yt.browseContinuation(page.continuation!);
+        final seenContinuations = <String>{};
+        var pageCount = 0;
+        while (page.continuation != null && channels.length < 5000 && pageCount < 100) {
+          final continuation = page.continuation!;
+          if (!seenContinuations.add(continuation)) {
+            debugPrint('YouPipe: stopped repeated subscription continuation');
+            break;
+          }
+          pageCount++;
+          page = await yt.browseContinuation(continuation);
           final more = page.entries.allItems.whereType<ChannelItem>();
           if (more.isEmpty) break;
           for (final channel in more) {
