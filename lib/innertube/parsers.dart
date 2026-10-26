@@ -48,6 +48,7 @@ const Map<String, _ItemParser> _parsers = {
 List<YtItem> parseItems(Object? root) {
   final out = <YtItem>[];
   final seen = <YtItem>{};
+  final seenPosts = <String>{};
   void walk(Object? o) {
     if (o is Map) {
       for (final e in o.entries) {
@@ -86,7 +87,77 @@ String? _shelfTitle(Json s) =>
     textOf(s['title']) ??
     textOf(nav(s, ['header', 'richListHeaderRenderer', 'title']));
 
-/// Items and shelves under [root], in document order. Items already seen in an earlier entry are dropped.
+String? _postText(Object? value) =>
+    textOf(value) ?? nav<String>(value, ['content']) ?? nav<String>(value, ['text', 'content']);
+
+CommunityPost? _communityPost(Json node) {
+  final id = node['postId'] as String? ??
+      node['backstagePostId'] as String? ??
+      nav<String>(node, ['postId', 'postId']);
+  final text = _postText(node['contentText']) ??
+      _postText(node['postText']) ??
+      _postText(node['text']) ??
+      _postText(nav(node, ['content', 'contentText']));
+  if (text == null || text.trim().isEmpty) return null;
+
+  final author = _postText(node['authorText']) ??
+      _postText(node['authorName']) ??
+      _postText(nav(node, ['author', 'name']));
+  final avatar = _bestImage(node['authorThumbnail']) ??
+      _bestImage(node['authorAvatar']) ??
+      _bestImage(nav(node, ['author', 'thumbnail']));
+
+  final published = _postText(node['publishedTimeText']) ??
+      _postText(node['publishedTime']) ??
+      _postText(node['publishedTimeTextViewModel']);
+
+  final imageUrls = <String>[];
+  void collectImages(Object? value) {
+    if (value is Map) {
+      // Only walk attachment data, so the post author's avatar is not mistaken for an attached image.
+      final thumbs = navList(value, ['image', 'thumbnails']);
+      final sources = navList(value, ['image', 'sources']);
+      for (final t in [...thumbs, ...sources]) {
+        final url = _https(t['url'] as String?);
+        if (url != null && !imageUrls.contains(url)) imageUrls.add(url);
+      }
+      for (final entry in value.entries) {
+        if (entry.key == 'authorThumbnail' || entry.key == 'authorAvatar' || entry.key == 'avatar') continue;
+        if (entry.key == 'backstageAttachment' ||
+            entry.key == 'backstageImageRenderer' ||
+            entry.key == 'image' ||
+            entry.key == 'images' ||
+            entry.key == 'postImage' ||
+            entry.key == 'thumbnails' ||
+            entry.key == 'sources') {
+          collectImages(entry.value);
+        } else if (entry.key == 'backstageAttachmentRenderer') {
+          collectImages(entry.value);
+        }
+      }
+    } else if (value is List) {
+      for (final item in value) {
+        collectImages(item);
+      }
+    }
+  }
+
+  collectImages(node['backstageAttachment']);
+  collectImages(node['backstageAttachmentRenderer']);
+  collectImages(node['backstageImageRenderer']);
+  collectImages(node['images']);
+  collectImages(node['image']);
+  return CommunityPost(
+    id: id ?? '${author ?? 'post'}-${text.hashCode}',
+    text: text.trim(),
+    author: author,
+    avatar: avatar,
+    publishedText: published,
+    images: imageUrls,
+  );
+}
+
+/// Items and shelves under [root], including native Community posts, in document order.
 List<FeedEntry> parseFeed(Object? root) {
   final out = <FeedEntry>[];
   final seen = <YtItem>{};
@@ -94,6 +165,22 @@ List<FeedEntry> parseFeed(Object? root) {
     if (o is Map) {
       for (final e in o.entries) {
         final v = e.value;
+        if (e.key == 'backstagePostThreadRenderer' && v is Json) {
+          final postNode = nav<Json>(v, ['post', 'backstagePostRenderer']) ??
+              nav<Json>(v, ['post', 'backstagePostViewModel']) ??
+              nav<Json>(v, ['backstagePostRenderer']) ??
+              nav<Json>(v, ['backstagePostViewModel']);
+          if (postNode != null) {
+            final post = _communityPost(postNode);
+            if (post != null && seenPosts.add(post.id)) out.add(PostEntry(post));
+          }
+          continue;
+        }
+        if ((e.key == 'backstagePostRenderer' || e.key == 'backstagePostViewModel') && v is Json) {
+          final post = _communityPost(v);
+          if (post != null && seenPosts.add(post.id)) out.add(PostEntry(post));
+          continue;
+        }
         // Searching a channel's name: its card, then a row of its videos.
         if (e.key == 'officialCardViewModel' && v is Json) {
           final channel = _officialCard(v);
