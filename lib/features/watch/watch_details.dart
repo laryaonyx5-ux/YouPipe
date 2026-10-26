@@ -714,7 +714,7 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                         Icon(_showReplies ? Symbols.expand_less : Symbols.expand_more, size: 20),
                         const SizedBox(width: 4),
                         Text(
-                          '${cm.replyCount} ${cm.replyCount == 1 ? 'reply' : 'replies'}',
+                          '${cm.replyCount} ${cm.replyCount == 1 ? 'réponse' : 'réponses'}',
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -766,7 +766,7 @@ class QueuePanel extends ConsumerWidget {
     if (now == null) return const SizedBox.shrink();
     return Column(
       children: [
-        PanelHeader(title: Text('Queue · ${now.index + 1}/${now.queue.length}'), onClose: onClose),
+        PanelHeader(title: Text('File d’attente · ${now.index + 1}/${now.queue.length}'), onClose: onClose),
         Expanded(
           child: ListView.builder(
             // Explicit, or the list adds the status bar's height on top (it reads the screen's insets).
