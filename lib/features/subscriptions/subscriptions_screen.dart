@@ -97,8 +97,8 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
                     hasScrollBody: false,
                     child: EmptyView(
                       icon: Symbols.video_library,
-                      title: all.isEmpty ? 'Chargement de vos abonnements…" : 'Rien à afficher",
-                      message: all.isEmpty ? 'Tirez vers le bas pour actualiser." : 'Essayez un autre filtre.",
+                      title: all.isEmpty ? 'Chargement de vos abonnements…' : 'Rien à afficher',
+                      message: all.isEmpty ? 'Tirez vers le bas pour actualiser.' : 'Essayez un autre filtre.',
                     ),
                   )
                 else if (_filter == _Filter.shorts)
