@@ -431,10 +431,10 @@ Future<bool> confirmUnsubscribe(BuildContext context, String channelName) async 
     await showDialog<bool>(
       context: context,
       builder: (dialog) => AlertDialog(
-        content: Text('Unsubscribe from $channelName?'),
+        content: Text('Se désabonner de $channelName ?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Annuler')),
-          TextButton(onPressed: () => Navigator.pop(dialog, true), child: const Text('Unsubscribe')),
+          TextButton(onPressed: () => Navigator.pop(dialog, true), child: const Text('Se désabonner')),
         ],
       ),
     ) ==
@@ -480,7 +480,7 @@ class SubscribeButton extends ConsumerWidget {
                   const SizedBox(width: 6),
                 ],
                 Text(
-                  subscribed ? 'Subscribed' : 'Subscribe',
+                  subscribed ? 'Abonné' : "S'abonner",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
