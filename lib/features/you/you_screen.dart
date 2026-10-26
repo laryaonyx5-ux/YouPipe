@@ -147,7 +147,7 @@ class YouScreen extends ConsumerWidget {
                     for (final p in playlists)
                       _PlaylistCard(
                         title: p.playlist.name,
-                        subtitle: p.playlist.isWatchLater ? '${p.count} videos' : 'Privée · ${p.count} vidéos',
+                        subtitle: p.playlist.isWatchLater ? '${p.count} vidéos' : 'Privée · ${p.count} vidéos',
                         thumbnail: p.thumbnail,
                         icon: p.playlist.isWatchLater ? Symbols.schedule : null,
                         onTap: () => openLocalPlaylist(context, ref, p.playlist.id),
