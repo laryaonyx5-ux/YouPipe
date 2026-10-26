@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../innertube/models.dart';
+import '../../util/format.dart';
 import '../../providers.dart';
 import '../navigation.dart';
 import '../theme/yt_theme.dart';
@@ -15,7 +16,7 @@ import 'video_menu.dart';
 import '../layout.dart';
 
 String videoMeta(VideoItem v, {bool withChannel = true}) =>
-    [if (withChannel) ?v.channelName, ?v.viewsText, ?v.publishedText].where((s) => s.isNotEmpty).join(' · ');
+    [if (withChannel) ?v.channelName, if (v.viewsText != null) localizeViewsText(v.viewsText!), if (v.publishedText != null) localizeRelativeText(v.publishedText!)].where((s) => s.isNotEmpty).join(' · ');
 
 /// The duration / LIVE badge in a thumbnail's corner, and the red watched bar along its bottom.
 class ThumbnailOverlay extends ConsumerWidget {
@@ -241,7 +242,7 @@ class VideoRow extends ConsumerWidget {
                       style: YtText.meta.copyWith(color: c.textSecondary),
                     ),
                     if (video.publishedText != null)
-                      Text(video.publishedText!, style: YtText.meta.copyWith(color: c.textSecondary)),
+                      Text(localizeRelativeText(video.publishedText!), style: YtText.meta.copyWith(color: c.textSecondary)),
                   ],
                 ),
               ),
