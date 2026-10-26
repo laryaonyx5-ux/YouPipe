@@ -252,7 +252,7 @@ Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video)
   );
   if (height == null) return;
   await ref.read(downloadManagerProvider).start(video, height);
-  if (context.mounted) showSnack(context, 'Downloading…', action: 'View', onAction: () => openDownloads(context, ref));
+  if (context.mounted) showSnack(context, 'Téléchargement…', action: 'View', onAction: () => openDownloads(context, ref));
 }
 
 Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) => showModalBottomSheet<void>(
@@ -265,7 +265,7 @@ Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) =
         if (d.row.state == DownloadState.failed)
           ListTile(
             leading: const Icon(Symbols.refresh),
-            title: const Text('Retry download'),
+            title: const Text('Réessayer le téléchargement'),
             onTap: () {
               Navigator.of(sheet).pop();
               _retry(ref, d);
@@ -273,11 +273,11 @@ Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) =
           ),
         ListTile(
           leading: const Icon(Symbols.delete),
-          title: Text(d.row.state == DownloadState.done ? 'Delete from downloads' : 'Cancel download'),
+          title: Text(d.row.state == DownloadState.done ? 'Supprimer des téléchargements' : 'Annuler le téléchargement'),
           onTap: () {
             Navigator.of(sheet).pop();
             ref.read(downloadManagerProvider).remove(d.video.id);
-            showSnack(context, 'Removed from downloads');
+            showSnack(context, 'Retiré des téléchargements');
           },
         ),
       ],
