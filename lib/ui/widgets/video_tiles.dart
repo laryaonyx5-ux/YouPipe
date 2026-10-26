@@ -500,7 +500,7 @@ class SubscribeButton extends ConsumerWidget {
   }
 }
 
-/// A playlist row: a thumbnail with the "N videos" strip on its right edge.
+/// A playlist row: a thumbnail with the "vidéos" strip on its right edge.
 class PlaylistRow extends ConsumerWidget {
   const PlaylistRow(this.playlist, {super.key, this.onTap});
 
