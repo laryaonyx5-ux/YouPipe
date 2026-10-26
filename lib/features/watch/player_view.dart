@@ -75,7 +75,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
   Timer? _seekReset;
   bool _boost = false;
 
-  /// A short message over the video ("Autoplay is on"), like YouTube's.
+  /// A short message over the video ("La lecture automatique est activée"), like YouTube's.
   String? _flash;
   Timer? _flashReset;
 
@@ -188,7 +188,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     final s = ref.read(settingsProvider);
     ref.read(settingsProvider.notifier).update(s.copyWith(autoplay: !s.autoplay));
     if (s.autoplay) ref.read(upNextCountdownProvider.notifier).cancel();
-    _showFlash(s.autoplay ? 'Autoplay is off' : 'Autoplay is on');
+    _showFlash(s.autoplay ? 'Autoplay is off' : 'La lecture automatique est activée');
     _scheduleHide();
   }
 
@@ -525,7 +525,7 @@ class _AutoplaySwitch extends StatelessWidget {
   );
 }
 
-/// The end-of-video "Up next" card with its countdown, Cancel and Play now (docs/playback.md).
+/// The end-of-video "À suivre" card with its countdown, Cancel and Play now (docs/playback.md).
 class _UpNextOverlay extends ConsumerStatefulWidget {
   const _UpNextOverlay({required this.countdown});
 
