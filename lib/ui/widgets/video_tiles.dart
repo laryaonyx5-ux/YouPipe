@@ -732,12 +732,82 @@ class FeedEntryView extends ConsumerWidget {
     ItemEntry(item: final VideoItem v) => VideoCard(v),
     ItemEntry(item: final ChannelItem c) => Padding(padding: const EdgeInsets.only(bottom: 12), child: ChannelRow(c)),
     ItemEntry(item: final PlaylistItem p) => Padding(padding: const EdgeInsets.only(bottom: 12), child: PlaylistRow(p)),
+    PostEntry(:final post) => NativeCommunityPostCard(post: post),
     ShelfEntry(shorts: true, :final title, :final items) => ShortsShelf(
       title: title.isEmpty ? 'Shorts' : title,
       items: items.whereType<VideoItem>().toList(),
     ),
     ShelfEntry(:final title, :final items) => HorizontalShelf(title: title, items: items),
   };
+}
+
+/// Native card for a YouTube Community post; no browser or embedded YouTube page.
+class NativeCommunityPostCard extends StatelessWidget {
+  const NativeCommunityPostCard({super.key, required this.post});
+
+  final CommunityPost post;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.yt;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Avatar(post.avatar, size: 40, name: post.author ?? 'YouTube'),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(post.author ?? 'Publication', style: YtText.rowTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    if (post.publishedText != null)
+                      Text(post.publishedText!, style: YtText.meta.copyWith(color: colors.textSecondary)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.more_vert),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SelectableText(post.text, style: TextStyle(color: colors.textPrimary, fontSize: 15, height: 1.35)),
+          if (post.images.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            if (post.images.length == 1)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: YtImage(post.images.first, fit: BoxFit.cover),
+                ),
+              )
+            else
+              SizedBox(
+                height: 190,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: post.images.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
+                  itemBuilder: (_, i) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: AspectRatio(
+                      aspectRatio: 4 / 5,
+                      child: YtImage(post.images[i], fit: BoxFit.cover),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+          const SizedBox(height: 12),
+          Divider(height: 1, color: colors.divider),
+        ],
+      ),
+    );
+  }
 }
 
 /// A titled horizontal row of small cards (a channel's shelves, "People also watched").
