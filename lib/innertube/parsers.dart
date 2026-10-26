@@ -527,6 +527,157 @@ ChannelItem? _officialCard(Json v) {
   );
 }
 
+
+/// Parses native Community posts from the channel's InnerTube Posts tab.
+CommunityPostsPage parseCommunityPosts(Json data) {
+  final posts = <CommunityPost>[];
+  final seen = <String>{};
+
+  String? firstText(Object? root, Set<String> keys) {
+    String? found;
+    void walk(Object? value) {
+      if (found != null) return;
+      if (value is Map) {
+        for (final entry in value.entries) {
+          if (keys.contains(entry.key)) {
+            final candidate = textOf(entry.value);
+            if (candidate != null && candidate.trim().isNotEmpty) {
+              found = candidate.trim();
+              return;
+            }
+          }
+        }
+        for (final entry in value.entries) {
+          walk(entry.value);
+          if (found != null) return;
+        }
+      } else if (value is List) {
+        for (final item in value) {
+          walk(item);
+          if (found != null) return;
+        }
+      }
+    }
+    walk(root);
+    return found;
+  }
+
+  List<String> imagesOf(Object? root) {
+    final urls = <String>[];
+    void walk(Object? value, {bool inAttachment = false}) {
+      if (value is Map) {
+        for (final entry in value.entries) {
+          final key = entry.key.toString().toLowerCase();
+          final attached = inAttachment ||
+              key.contains('attachment') ||
+              key.contains('backstageimage') ||
+              key == 'imagerenderer' ||
+              key == 'imageviewmodel' ||
+              key == 'images';
+          if (entry.key == 'thumbnails' && attached && entry.value is List) {
+            for (final thumb in entry.value as List) {
+              if (thumb is Map && thumb['url'] is String) {
+                final url = _https(thumb['url'] as String);
+                if (url != null && !urls.contains(url)) urls.add(url);
+              }
+            }
+          } else {
+            walk(entry.value, inAttachment: attached);
+          }
+        }
+      } else if (value is List) {
+        for (final item in value) {
+          walk(item, inAttachment: inAttachment);
+        }
+      }
+    }
+    walk(root);
+    return urls;
+  }
+
+  List<String> pollOptionsOf(Object? root) {
+    final options = <String>[];
+    void walk(Object? value, {bool inPoll = false}) {
+      if (value is Map) {
+        for (final entry in value.entries) {
+          final key = entry.key.toString().toLowerCase();
+          final poll = inPoll || key.contains('poll');
+          if (poll && (key.contains('choice') || key.contains('option'))) {
+            final label = firstText(entry.value, {'text', 'title', 'choiceText'});
+            if (label != null && !options.contains(label)) options.add(label);
+          } else {
+            walk(entry.value, inPoll: poll);
+          }
+        }
+      } else if (value is List) {
+        for (final item in value) {
+          walk(item, inPoll: inPoll);
+        }
+      }
+    }
+    walk(root);
+    return options;
+  }
+
+  CommunityPost? parsePost(Json root) {
+    final id = (root['postId'] ?? root['id'] ?? nav<String>(root, ['backstagePostRenderer', 'postId']) ??
+            nav<String>(root, ['postViewModel', 'postId']))
+        ?.toString();
+    final text = firstText(root, {'contentText', 'postText', 'text', 'message', 'content'});
+    if (id == null || text == null || !seen.add(id)) return null;
+    final images = imagesOf(root);
+    return CommunityPost(
+      id: id,
+      text: text,
+      author: firstText(root, {'authorText', 'authorName', 'displayName'}),
+      authorAvatar: _https(firstText(root, {'authorThumbnail', 'avatarUrl'})),
+      publishedText: firstText(root, {'publishedTimeText', 'publishedTime', 'timestampText'}),
+      images: images,
+      pollOptions: pollOptionsOf(root),
+      likeCount: firstText(root, {'voteCount', 'likeCount', 'likesCount'}),
+      commentCount: firstText(root, {'commentCount', 'replyCount'}),
+    );
+  }
+
+  void walk(Object? value) {
+    if (value is Map) {
+      final thread = value['backstagePostThreadRenderer'];
+      if (thread is Json) {
+        final post = thread['post'];
+        if (post is Json) {
+          final renderer = post['backstagePostRenderer'] ?? post['postViewModel'] ?? post;
+          if (renderer is Json) {
+            final parsed = parsePost(renderer);
+            if (parsed != null) posts.add(parsed);
+          }
+        } else {
+          final parsed = parsePost(thread);
+          if (parsed != null) posts.add(parsed);
+        }
+        // Don't parse the same post again through nested traversal.
+        return;
+      }
+      for (final entry in value.entries) {
+        if (entry.key == 'backstagePostRenderer' || entry.key == 'postViewModel') {
+          if (entry.value is Json) {
+            final parsed = parsePost(entry.value as Json);
+            if (parsed != null) posts.add(parsed);
+          }
+          continue;
+        }
+        walk(entry.value);
+      }
+    } else if (value is List) {
+      for (final item in value) {
+        walk(item);
+      }
+    }
+  }
+
+  walk(data);
+  return CommunityPostsPage(posts, findContinuation(data));
+}
+
 ChannelPage parseChannel(Json data, String id) {
   final header = nav<Json>(data, ['header', 'pageHeaderRenderer']);
   final view = nav<Json>(header, ['content', 'pageHeaderViewModel']);
