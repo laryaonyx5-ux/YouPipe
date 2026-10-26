@@ -42,7 +42,7 @@ class ChannelScreen extends ConsumerWidget {
           child: Scaffold(
             body: NestedScrollView(
               headerSliverBuilder: (context, _) => [
-                SliiverAppBar(
+                SliverAppBar(
                   pinned: true,
                   title: Text(p.name),
                   leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
@@ -55,7 +55,7 @@ class ChannelScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                SliiverToBoxAdapter(child: _Header(page: p)),
+                SliverToBoxAdapter(child: _Header(page: p)),
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _TabBarDelegate(
@@ -238,9 +238,9 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
     } else if (isShorts) {
       body = SliverPadding(
         padding: const EdgeInsets.all(4),
-        sliver: SliverGrid.builder(
+        sliver: SliiverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliiverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 9 / 16,
             mainAxisSpacing: 4,
@@ -413,7 +413,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliiverFillRemaining(
+          SliverFillRemaining(
             hasScrollBody: false,
             child: Center(
               child: Padding(
@@ -471,7 +471,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
                 child: TextButton(onPressed: _loadMore, child: const Text('Erreur de chargement — réessayer')),
               ),
             ),
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          const SliiverToBoxAdapter(child: SizedBox(height: 24)),
           const SliverBottomInset(),
         ],
       ),
