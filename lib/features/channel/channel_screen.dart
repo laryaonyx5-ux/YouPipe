@@ -354,6 +354,9 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         _loading = false;
         _error = null;
       });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _maybeLoadMore();
+      });
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -380,6 +383,9 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         _posts.addAll(page.posts.where((p) => known.add(p.id)));
         _continuation = page.continuation == token ? null : page.continuation;
         _loadingMore = false;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _maybeLoadMore();
       });
     } catch (e) {
       if (!mounted) return;
