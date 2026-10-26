@@ -429,12 +429,12 @@ class _Rail extends ConsumerWidget {
     );
     return Column(
       children: [
-        action(Symbols.thumb_up, likes == null ? 'Like' : compactCount(likes + (liked ? 1 : 0)), () {
+        action(Symbols.thumb_up, likes == null ? 'J'aime' : compactCount(likes + (liked ? 1 : 0)), () {
           ref.read(libraryProvider).setLiked(item, !liked);
         }, filled: liked),
-        action(Symbols.thumb_down, votes == null ? 'Dislike' : compactCount(votes.dislikes), () {}, filled: false),
-        action(Symbols.comment, 'Comments', () => _showComments(context, info.videoId)),
-        action(Symbols.share, 'Share', () => shareVideo(item)),
+        action(Symbols.thumb_down, votes == null ? 'Je n'aime pas' : compactCount(votes.dislikes), () {}, filled: false),
+        action(Symbols.comment, 'Commentaires', () => _showComments(context, info.videoId)),
+        action(Symbols.share, 'Partager', () => shareVideo(item)),
         action(Symbols.more_horiz, '', () => showVideoMenu(context, ref, item)),
       ],
     );
@@ -505,7 +505,7 @@ class _Meta extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    subscribed ? 'Subscribed' : 'Subscribe',
+                    subscribed ? 'Abonné' : 'S'abonner',
                     style: TextStyle(
                       color: subscribed ? Colors.white : YtColors.dark.onSubscribe,
                       fontSize: 13,
