@@ -69,7 +69,7 @@ void uploadNotificationBackgroundDispatcher() {
       final prefs = await SharedPreferences.getInstance();
       if (!(prefs.getBool(_enabledKey) ?? true)) return true;
       final plugin = FlutterLocalNotificationsPlugin();
-      await plugin.initialize(const InitializationSettings(
+      await plugin.initialize(settings: const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       ));
       await plugin
@@ -93,7 +93,7 @@ class UploadNotificationService {
   Future<void> initialize() async {
     if (!_initialized) {
       await _plugin.initialize(
-        const InitializationSettings(
+        settings: const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         ),
         onDidReceiveNotificationResponse: _onResponse,
@@ -231,10 +231,10 @@ class UploadNotificationService {
         ],
       );
       await plugin.show(
-        video.id.hashCode & 0x7fffffff,
-        video.channelName,
-        video.title,
-        NotificationDetails(android: details),
+        id: video.id.hashCode & 0x7fffffff,
+        title: video.channelName,
+        body: video.title,
+        notificationDetails: NotificationDetails(android: details),
         payload: jsonEncode({
           'id': video.id,
           'title': video.title,
