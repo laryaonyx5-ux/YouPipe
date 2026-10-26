@@ -3,7 +3,7 @@
 library;
 
 import 'package:flutter_riverpod/misc.dart' show ProviderListenable;
-import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/material.dart' show Colors, Icon, IconButton;
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
