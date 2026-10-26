@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../data/subscriptions_feed.dart';
+import '../../innertube/innertube.dart';
+import '../account/account.dart';
 import '../../innertube/models.dart';
 import '../../providers.dart';
 import '../../ui/navigation.dart';
@@ -16,11 +20,11 @@ enum _Filter { all, today, videos, shorts, continueWatching, unwatched }
 
 const _labels = {
   _Filter.all: 'Tout',
-  _Filter.today: 'Today',
-  _Filter.videos: 'Videos',
+  _Filter.today: "Aujourd'hui",
+  _Filter.videos: 'Vidéos',
   _Filter.shorts: 'Shorts',
   _Filter.continueWatching: 'Reprendre la lecture',
-  _Filter.unwatched: 'Unwatched',
+  _Filter.unwatched: 'Non regardées',
 };
 
 class SubscriptionsScreen extends ConsumerStatefulWidget {
@@ -36,7 +40,36 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
   @override
   void initState() {
     super.initState();
+    unawaited(_syncYouTubeSubscriptions().catchError((Object e) {
+      debugPrint('YouPipe: subscription import failed: $e');
+    }));
     ref.read(subscriptionsFeedServiceProvider).refresh();
+  }
+
+  /// Retry importing the signed-in YouTube account whenever this tab is opened or refreshed.
+  Future<void> _syncYouTubeSubscriptions() async {
+    await ref.read(authProvider.future);
+    final yt = ref.read(innerTubeProvider);
+    if (!yt.signedIn) return;
+
+    var page = await yt.subscribedChannels();
+    final channels = <String, ChannelItem>{
+      for (final channel in page.entries.allItems.whereType<ChannelItem>()) channel.id: channel,
+    };
+    while (page.continuation != null && channels.length < 5000) {
+      page = await yt.browseContinuation(page.continuation!);
+      final more = page.entries.allItems.whereType<ChannelItem>();
+      if (more.isEmpty) break;
+      for (final channel in more) {
+        channels[channel.id] = channel;
+      }
+    }
+    if (channels.isEmpty) {
+      debugPrint('YouPipe: YouTube returned no subscription channels to import');
+      return;
+    }
+    final added = await ref.read(libraryProvider).importSubscriptions(channels.values.toList());
+    debugPrint('YouPipe: imported ${channels.length} YouTube subscriptions ($added import attempts)');
   }
 
   @override
@@ -65,7 +98,10 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
       body: StatusBarScrim(
         child: RefreshIndicator(
           color: context.yt.textPrimary,
-          onRefresh: () => ref.read(subscriptionsFeedServiceProvider).refresh(force: true),
+          onRefresh: () async {
+            await _syncYouTubeSubscriptions();
+            await ref.read(subscriptionsFeedServiceProvider).refresh(force: true);
+          },
           child: CustomScrollView(
             slivers: [
               const YtTopBar(),
