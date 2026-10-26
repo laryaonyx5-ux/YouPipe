@@ -11,13 +11,13 @@ import '../../ui/widgets/common.dart';
 final settingsExtraSections = <Widget Function(BuildContext, WidgetRef)>[];
 
 const _languages = {
-  'en': 'English',
+  'en': 'Anglais',
   'hi': 'हिन्दी',
   'ml': 'മലയാളം',
   'ta': 'தமிழ்',
   'es': 'Espagnol',
   'fr': 'Français',
-  'de': 'Deutsch',
+  'de': 'Allemand',
   'pt': 'Portugais',
   'it': 'Italiano',
   'ja': '日本語',
@@ -29,15 +29,15 @@ const _languages = {
 const _regions = {
   'US': 'États-Unis',
   'GB': 'Royaume-Uni',
-  'IE': 'Ireland',
-  'IN': 'India',
+  'IE': 'Irlande',
+  'IN': 'Inde',
   'CA': 'Canada',
-  'AU': 'Australia',
-  'DE': 'Germany',
+  'AU': 'Australie',
+  'DE': 'Allemagne',
   'FR': 'France',
-  'ES': 'Spain',
-  'BR': 'Brazil',
-  'JP': 'Japan',
+  'ES': 'Espagne',
+  'BR': 'Brésil',
+  'JP': 'Japon',
   'KR': 'Corée du Sud',
   'AE': 'Émirats arabes unis',
 };
@@ -168,7 +168,7 @@ class SettingsScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               child: Text(
-                'YouPipe is an independent, open-source app. It isn\'t made by or affiliated with YouTube or Google.',
+                'YouPipe est une application indépendante et open source, qui n’est ni créée par YouTube ni affiliée à YouTube ou Google.',
                 style: TextStyle(color: c.textSecondary, fontSize: 12),
               ),
             ),
