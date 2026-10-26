@@ -6,6 +6,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../ui/theme/yt_theme.dart';
+import '../../util/format.dart';
 
 /// Native inbox for notifications detected by YouPipe. It never opens a browser.
 class NotificationsScreen extends StatefulWidget {
@@ -96,7 +97,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       final title = item['title'] as String? ?? 'Nouvelle vidéo';
                       final channel = item['channelName'] as String? ?? 'YouTube';
                       final thumbnail = item['thumbnail'] as String?;
-                      final published = item['publishedAt'] as String?;
+                      final publishedRaw = item['publishedAt'] as String?;
+                      final publishedAt = publishedRaw == null ? null : DateTime.tryParse(publishedRaw);
+                      final published = publishedAt == null ? null : timeAgo(publishedAt);
                       return ListTile(
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
