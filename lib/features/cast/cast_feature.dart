@@ -190,8 +190,8 @@ class _CastSheetState extends ConsumerState<_CastSheet> {
               if (devices.isEmpty)
                 const ListTile(
                   leading: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)),
-                  title: Text('Looking for devices on your Wi-Fi…'),
-                  subtitle: Text('Your phone and TV need to be on the same Wi-Fi'),
+                  title: Text('Recherche des appareils sur votre Wi-Fi…'),
+                  subtitle: Text('Votre téléphone et votre téléviseur doivent être sur le même Wi-Fi'),
                 ),
               if (connected != null)
                 Padding(
@@ -203,7 +203,7 @@ class _CastSheetState extends ConsumerState<_CastSheet> {
                         Navigator.of(context).pop();
                         cast.disconnect();
                       },
-                      child: const Text('Disconnect'),
+                      child: const Text('Déconnecter'),
                     ),
                   ),
                 ),
