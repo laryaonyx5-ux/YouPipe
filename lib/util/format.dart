@@ -45,14 +45,14 @@ String compactCount(int n) {
   return '$n';
 }
 
-/// "1.2M views", "1 view", "No views".
+/// Libellé français du nombre de vues.
 String viewsLabel(int n) => n < 0
     ? ''
     : n == 0
-    ? 'No views'
+    ? 'Aucune vue'
     : n == 1
-    ? '1 view'
-    : '${compactCount(n)} views';
+    ? '1 vue'
+    : '${compactCount(n)} vues';
 
 /// Affiche les dates relatives en français, comme « il y a 3 heures ».
 String timeAgo(DateTime t, {DateTime? now}) {
