@@ -82,7 +82,7 @@ Future<void> importSubscriptions(BuildContext context, WidgetRef ref) async {
   final channels = parseSubscriptionsFile(text);
   if (!context.mounted) return;
   if (channels.isEmpty) {
-    showSnack(context, 'No channels found in that file');
+    showSnack(context, 'Aucune chaîne trouvée dans ce fichier');
     return;
   }
   await ref.read(libraryProvider).importSubscriptions(channels);
@@ -106,7 +106,7 @@ Widget subscriptionsMenu(BuildContext context, WidgetRef ref) => PopupMenuButton
   icon: const Icon(Symbols.more_vert),
   onSelected: (v) => v == 'import' ? importSubscriptions(context, ref) : exportSubscriptionsFile(context, ref),
   itemBuilder: (_) => const [
-    PopupMenuItem(value: 'import', child: Text('Import (Google Takeout or NewPipe)')),
-    PopupMenuItem(value: 'export', child: Text('Export')),
+    PopupMenuItem(value: 'import', child: Text('Importer (Google Takeout ou NewPipe)')),
+    PopupMenuItem(value: 'export', child: Text('Exporter')),
   ],
 );
