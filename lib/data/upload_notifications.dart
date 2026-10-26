@@ -18,6 +18,7 @@ const uploadNotificationTask = 'youpipe.checkSubscribedUploads';
 const _enabledKey = 'uploadNotificationsEnabled';
 const _seenKey = 'uploadNotificationSeenIds';
 const _mutedKey = 'uploadNotificationMutedChannels';
+const _historyKey = 'uploadNotificationHistory';
 
 final uploadNotifications = UploadNotificationService();
 
@@ -201,6 +202,30 @@ class UploadNotificationService {
       return;
     }
     newRows.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
+    // Keep a native in-app notification history as well as Android's system notifications.
+    if (newRows.isNotEmpty) {
+      final history = prefs.getStringList(_historyKey) ?? <String>[];
+      final known = <String>{};
+      for (final raw in history) {
+        try {
+          final item = jsonDecode(raw);
+          if (item is Map) known.add(item['id']?.toString() ?? '');
+        } catch (_) {}
+      }
+      final added = <String>[];
+      for (final video in newRows) {
+        if (!known.add(video.id)) continue;
+        added.add(jsonEncode({
+          'id': video.id,
+          'channelId': video.channelId,
+          'channelName': video.channelName,
+          'title': video.title,
+          'thumbnail': video.thumbnail,
+          'publishedAt': video.publishedAt.toIso8601String(),
+        }));
+      }
+      await prefs.setStringList(_historyKey, [...added, ...history].take(100).toList());
+    }
     for (final video in newRows.take(10)) {
       BigPictureStyleInformation? pictureStyle;
       try {
