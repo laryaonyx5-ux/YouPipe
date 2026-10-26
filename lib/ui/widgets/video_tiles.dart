@@ -433,7 +433,7 @@ Future<bool> confirmUnsubscribe(BuildContext context, String channelName) async 
       builder: (dialog) => AlertDialog(
         content: Text('Unsubscribe from $channelName?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Annuler')),
           TextButton(onPressed: () => Navigator.pop(dialog, true), child: const Text('Unsubscribe')),
         ],
       ),
@@ -457,7 +457,7 @@ class SubscribeButton extends ConsumerWidget {
       if (!subscribed) {
         unawaited(ref.read(subscriptionsFeedServiceProvider).refresh(force: true));
       }
-      if (context.mounted) showSnack(context, subscribed ? 'Subscription removed' : 'Subscription added');
+      if (context.mounted) showSnack(context, subscribed ? 'Abonnement supprimé' : 'Abonnement ajouté');
     }
 
     return FocusHighlight(
@@ -593,7 +593,7 @@ class PlaylistThumb extends StatelessWidget {
                   children: [
                     const Icon(Symbols.playlist_play, size: 14, color: Colors.white),
                     const SizedBox(width: 2),
-                    // "12 videos" → "12"; an empty playlist's "No videos" → "0".
+                    // "12 videos" → "12"; an empty playlist's "Aucune vidéo" → "0".
                     Text(
                       count!.startsWith('No ') ? '0' : count!.replaceAll(' videos', '').replaceAll(' video', ''),
                       style: YtText.badge,
