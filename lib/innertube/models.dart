@@ -103,33 +103,6 @@ class Paged<T> {
   final String? continuation;
 }
 
-/// A native YouTube Community post (text and optional attached images).
-class CommunityPost {
-  const CommunityPost({
-    required this.id,
-    required this.text,
-    this.author,
-    this.avatar,
-    this.authorAvatar,
-    this.publishedText,
-    this.images = const [],
-    this.pollOptions = const [],
-    this.likeCount,
-    this.commentCount,
-  });
-
-  final String id;
-  final String text;
-  final String? author;
-  final String? avatar;
-  final String? authorAvatar;
-  final String? publishedText;
-  final List<String> images;
-  final List<String> pollOptions;
-  final String? likeCount;
-  final String? commentCount;
-}
-
 /// One entry of a feed: a single item, a Community post, or a titled shelf of items.
 sealed class FeedEntry {
   const FeedEntry();
