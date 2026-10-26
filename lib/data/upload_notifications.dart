@@ -81,6 +81,8 @@ class UploadNotificationService {
       description: 'Nouvelles vidéos des chaînes auxquelles vous êtes abonné',
       importance: Importance.high,
     ));
+    final prefs = await SharedPreferences.getInstance();
+    if (!(prefs.getBool(_enabledKey) ?? true)) return;
     await android?.requestNotificationsPermission();
     await Workmanager().initialize(uploadNotificationBackgroundDispatcher);
     await Workmanager().registerPeriodicTask(
