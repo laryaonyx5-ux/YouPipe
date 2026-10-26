@@ -72,7 +72,7 @@ Future<void> showVideoMenu(
             ),
           _MenuTile(
             icon: Symbols.share,
-            label: 'Share',
+            label: 'Partager',
             onTap: () {
               close();
               shareVideo(video);
@@ -143,7 +143,7 @@ class _WatchLaterTile extends ConsumerWidget {
   }
 }
 
-/// YouTube's "Save video to…" sheet: Watch later and every local playlist with checkboxes, plus "New playlist".
+/// YouTube's "Enregistrer la vidéo dans…" sheet: Watch later and every local playlist with checkboxes, plus "Nouvelle playlist".
 Future<void> showSaveToPlaylist(BuildContext context, WidgetRef ref, VideoItem video) async {
   await ref.read(libraryProvider).watchLaterId();
   if (!context.mounted) return;
@@ -162,7 +162,7 @@ Future<void> showSaveToPlaylist(BuildContext context, WidgetRef ref, VideoItem v
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
-                child: Text('Save video to...', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                child: Text('Enregistrer la vidéo dans…', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
               ),
               Flexible(
                 child: ListView(
@@ -194,9 +194,9 @@ Future<void> showSaveToPlaylist(BuildContext context, WidgetRef ref, VideoItem v
               const Divider(),
               ListTile(
                 leading: const Icon(Symbols.add),
-                title: const Text('New playlist'),
+                title: const Text('Nouvelle playlist'),
                 onTap: () async {
-                  final name = await promptText(sheet, title: 'New playlist', hint: 'Choose a title');
+                  final name = await promptText(sheet, title: 'Nouvelle playlist', hint: 'Choisissez un titre');
                   if (name == null || name.trim().isEmpty) return;
                   final lib = ref.read(libraryProvider);
                   final id = await lib.createPlaylist(name.trim());
