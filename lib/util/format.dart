@@ -1,6 +1,36 @@
 /// Number, duration and date formatting the way YouTube shows them.
 library;
 
+/// Translate common English relative ages returned by YouTube.
+String localizeRelativeText(String text) {
+  return text.replaceAllMapped(
+    RegExp(r'\b(\d+)\s+(years?|months?|weeks?|days?|hours?|minutes?|seconds?)\s+ago\b', caseSensitive: false),
+    (m) {
+      final n = int.parse(m[1]!);
+      final raw = m[2]!.toLowerCase();
+      final unit = switch (raw) {
+        'year' || 'years' => 'an',
+        'month' || 'months' => 'mois',
+        'week' || 'weeks' => 'semaine',
+        'day' || 'days' => 'jour',
+        'hour' || 'hours' => 'heure',
+        'minute' || 'minutes' => 'minute',
+        _ => 'seconde',
+      };
+      return 'il y a $n $unit${n == 1 || unit == 'mois' || unit == 'an' ? '' : 's'}';
+    },
+  ).replaceAll(RegExp(r'\bStreamed\b', caseSensitive: false), 'Diffusé')
+   .replaceAll(RegExp(r'\bPremiered\b', caseSensitive: false), 'Première')
+   .replaceAll(RegExp(r'\bScheduled\b', caseSensitive: false), 'Programmé');
+}
+
+/// Translate common English view-count labels returned by YouTube.
+String localizeViewsText(String text) => text
+    .replaceAll(RegExp(r'\bNo views\b', caseSensitive: false), 'Aucune vue')
+    .replaceAll(RegExp(r'\bviews\b', caseSensitive: false), 'vues')
+    .replaceAll(RegExp(r'\bview\b', caseSensitive: false), 'vue')
+    .replaceAll(RegExp(r'\bwatching\b', caseSensitive: false), 'en direct');
+
 /// "1.2M", "34K", "999". YouTube rounds down: 1,290,000 is "1.2M".
 String compactCount(int n) {
   String fmt(double v, String unit) {
@@ -24,17 +54,17 @@ String viewsLabel(int n) => n < 0
     ? '1 view'
     : '${compactCount(n)} views';
 
-/// "3 hours ago", like YouTube.
+/// Affiche les dates relatives en français, comme « il y a 3 heures ».
 String timeAgo(DateTime t, {DateTime? now}) {
   final d = (now ?? DateTime.now()).difference(t);
-  String unit(int n, String u) => '$n $u${n == 1 ? '' : 's'} ago';
-  if (d.inDays >= 365) return unit(d.inDays ~/ 365, 'year');
-  if (d.inDays >= 30) return unit(d.inDays ~/ 30, 'month');
-  if (d.inDays >= 7) return unit(d.inDays ~/ 7, 'week');
-  if (d.inDays >= 1) return unit(d.inDays, 'day');
-  if (d.inHours >= 1) return unit(d.inHours, 'hour');
+  String unit(int n, String u) => 'il y a $n $u${n == 1 || u == 'mois' ? '' : 's'}';
+  if (d.inDays >= 365) return unit(d.inDays ~/ 365, 'an');
+  if (d.inDays >= 30) return unit(d.inDays ~/ 30, 'mois');
+  if (d.inDays >= 7) return unit(d.inDays ~/ 7, 'semaine');
+  if (d.inDays >= 1) return unit(d.inDays, 'jour');
+  if (d.inHours >= 1) return unit(d.inHours, 'heure');
   if (d.inMinutes >= 1) return unit(d.inMinutes, 'minute');
-  return 'Just now';
+  return "À l'instant";
 }
 
 /// NewPipe's upload date ("2026-10-03T05:30:31-07:00") as "3 hours ago"; other text is returned as-is.
