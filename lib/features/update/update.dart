@@ -161,7 +161,7 @@ Widget updateSettings(BuildContext context, WidgetRef ref) {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
           child: Text(
-            'Updates',
+            'Mises à jour',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
