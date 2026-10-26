@@ -758,7 +758,7 @@ class NativeCommunityPostCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Avatar(post.avatar, size: 40, name: post.author ?? 'YouTube'),
+              Avatar(post.authorAvatar, size: 40, name: post.author ?? 'YouTube'),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
