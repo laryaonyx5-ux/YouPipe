@@ -15,10 +15,10 @@ const _languages = {
   'hi': 'हिन्दी',
   'ml': 'മലയാളം',
   'ta': 'தமிழ்',
-  'es': 'Español',
+  'es': 'Espagnol',
   'fr': 'Français',
   'de': 'Deutsch',
-  'pt': 'Português',
+  'pt': 'Portugais',
   'it': 'Italiano',
   'ja': '日本語',
   'ko': '한국어',
@@ -27,8 +27,8 @@ const _languages = {
 };
 
 const _regions = {
-  'US': 'United States',
-  'GB': 'United Kingdom',
+  'US': 'États-Unis',
+  'GB': 'Royaume-Uni',
   'IE': 'Ireland',
   'IN': 'India',
   'CA': 'Canada',
@@ -38,8 +38,8 @@ const _regions = {
   'ES': 'Spain',
   'BR': 'Brazil',
   'JP': 'Japan',
-  'KR': 'South Korea',
-  'AE': 'United Arab Emirates',
+  'KR': 'Corée du Sud',
+  'AE': 'Émirats arabes unis',
 };
 
 class SettingsScreen extends ConsumerWidget {
@@ -70,7 +70,7 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text('Paramètres'),
         leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
       ),
       body: MaxContentWidth(
@@ -80,15 +80,15 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('Appearance'),
               subtitle: Text(switch (s.themeMode) {
-                ThemeMode.system => 'Use device theme',
-                ThemeMode.dark => 'Dark theme',
-                ThemeMode.light => 'Light theme',
+                ThemeMode.system => 'Utiliser le thème de l'appareil',
+                ThemeMode.dark => 'Thème sombre',
+                ThemeMode.light => 'Thème clair',
               }),
               onTap: () async {
                 final m = await pick('Appearance', {
-                  ThemeMode.system: 'Use device theme',
-                  ThemeMode.dark: 'Dark theme',
-                  ThemeMode.light: 'Light theme',
+                  ThemeMode.system: 'Utiliser le thème de l'appareil',
+                  ThemeMode.dark: 'Thème sombre',
+                  ThemeMode.light: 'Thème clair',
                 }, s.themeMode);
                 if (m != null) await ctl.update(s.copyWith(themeMode: m));
               },
@@ -111,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             SwitchListTile(
               title: const Text('Picture-in-picture'),
-              subtitle: const Text('Keep watching in a small window when you leave the app'),
+              subtitle: const Text('Continuer à regarder dans une petite fenêtre en quittant l'application'),
               value: s.pip,
               onChanged: (v) => ctl.update(s.copyWith(pip: v)),
             ),
@@ -119,12 +119,12 @@ class SettingsScreen extends ConsumerWidget {
             // Autoplay is switched in the player, like YouTube (docs/playback.md).
             header('Playback'),
             SwitchListTile(
-              title: const Text('Resume where you left off'),
+              title: const Text('Reprendre là où vous en étiez'),
               value: s.resume,
               onChanged: (v) => ctl.update(s.copyWith(resume: v)),
             ),
             const Divider(),
-            header('Video quality preferences'),
+            header('Préférences de qualité vidéo'),
             for (final q in VideoQualityPref.values)
               ChoiceTile(
                 title: q.label,
@@ -134,35 +134,35 @@ class SettingsScreen extends ConsumerWidget {
               ),
             for (final section in settingsExtraSections) section(context, ref),
             const Divider(),
-            header('Manage all history'),
+            header('Gérer tout l'historique'),
             SwitchListTile(
-              title: const Text('Pause watch history'),
+              title: const Text('Suspendre l'historique des vidéos regardées'),
               value: !s.saveHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveHistory: !v)),
             ),
             SwitchListTile(
-              title: const Text('Pause search history'),
+              title: const Text('Suspendre l'historique des recherches'),
               value: !s.saveSearchHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveSearchHistory: !v)),
             ),
             ListTile(
-              title: const Text('Clear watch history'),
+              title: const Text('Effacer l'historique des vidéos regardées'),
               onTap: () async {
                 await ref.read(libraryProvider).clearHistory();
-                if (context.mounted) showSnack(context, 'Watch history cleared');
+                if (context.mounted) showSnack(context, 'Historique des vidéos regardées effacé');
               },
             ),
             ListTile(
-              title: const Text('Clear search history'),
+              title: const Text('Effacer l'historique des recherches'),
               onTap: () async {
                 await ref.read(libraryProvider).clearSearches();
-                if (context.mounted) showSnack(context, 'Search history cleared');
+                if (context.mounted) showSnack(context, 'Historique des recherches effacé');
               },
             ),
             const Divider(),
             header('About'),
             ListTile(
-              title: const Text('Open source licenses'),
+              title: const Text('Licences des logiciels libres'),
               onTap: () => showLicensePage(context: context, applicationName: 'YouPipe'),
             ),
             Padding(
