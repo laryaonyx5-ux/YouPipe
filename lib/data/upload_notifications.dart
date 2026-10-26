@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -19,6 +20,45 @@ const _seenKey = 'uploadNotificationSeenIds';
 const _mutedKey = 'uploadNotificationMutedChannels';
 
 final uploadNotifications = UploadNotificationService();
+
+@pragma('vm:entry-point')
+void uploadNotificationActionBackground(NotificationResponse response) {
+  final payload = response.payload;
+  if (payload == null) return;
+  if (response.actionId == 'watch_later') {
+    unawaited(_saveNotificationToWatchLater(payload));
+  } else if (response.actionId == 'mute_channel') {
+    unawaited(_muteNotificationChannel(payload));
+  }
+}
+
+Future<void> _saveNotificationToWatchLater(String payload) async {
+  final data = jsonDecode(payload) as Map<String, dynamic>;
+  final video = VideoItem(
+    id: data['id'] as String,
+    title: data['title'] as String? ?? '',
+    channelId: data['channelId'] as String?,
+    channelName: data['channelName'] as String?,
+    thumbnail: data['thumbnail'] as String?,
+  );
+  final db = AppDatabase();
+  try {
+    final library = LibraryRepository(db);
+    await library.addToPlaylist(await library.watchLaterId(), video);
+  } finally {
+    await db.close();
+  }
+}
+
+Future<void> _muteNotificationChannel(String payload) async {
+  final data = jsonDecode(payload) as Map<String, dynamic>;
+  final channelId = data['channelId'] as String?;
+  if (channelId == null) return;
+  final prefs = await SharedPreferences.getInstance();
+  final muted = prefs.getStringList(_mutedKey)?.toSet() ?? <String>{};
+  muted.add(channelId);
+  await prefs.setStringList(_mutedKey, muted.toList());
+}
 
 @pragma('vm:entry-point')
 void uploadNotificationBackgroundDispatcher() {
@@ -57,6 +97,7 @@ class UploadNotificationService {
           android: AndroidInitializationSettings('@mipmap/ic_launcher'),
         ),
         onDidReceiveNotificationResponse: _onResponse,
+        onDidReceiveBackgroundNotificationResponse: uploadNotificationActionBackground,
       );
       final launch = await _plugin.getNotificationAppLaunchDetails();
       final payload = launch?.notificationResponse?.payload;
