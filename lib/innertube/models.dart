@@ -103,8 +103,26 @@ class Paged<T> {
   final String? continuation;
 }
 
-/// One entry of a feed: a single item, or a titled shelf of items (Shorts shelf, "People also watched", a channel's
-/// playlist shelves).
+/// A native YouTube Community post (text and optional attached images).
+class CommunityPost {
+  const CommunityPost({
+    required this.id,
+    required this.text,
+    this.author,
+    this.avatar,
+    this.publishedText,
+    this.images = const [],
+  });
+
+  final String id;
+  final String text;
+  final String? author;
+  final String? avatar;
+  final String? publishedText;
+  final List<String> images;
+}
+
+/// One entry of a feed: a single item, a Community post, or a titled shelf of items.
 sealed class FeedEntry {
   const FeedEntry();
 }
@@ -115,7 +133,7 @@ class ItemEntry extends FeedEntry {
   final YtItem item;
 }
 
-class ShelfEntry extends FeedEntry {
+class PostEntry extends FeedEntry {\n  const PostEntry(this.post);\n\n  final CommunityPost post;\n}\n\nclass ShelfEntry extends FeedEntry {
   const ShelfEntry(this.title, this.items, {this.shorts = false});
 
   final String title;
