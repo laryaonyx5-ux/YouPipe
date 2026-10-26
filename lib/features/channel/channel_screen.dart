@@ -641,7 +641,7 @@ class _ChannelPostsWebTabState extends State<_ChannelPostsWebTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (_error != null && _loading) {
+    if (_error != null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
