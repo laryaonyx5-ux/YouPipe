@@ -45,17 +45,17 @@ Future<void> showVideoMenu(
           if (playing && !video.isShort)
             _MenuTile(
               icon: Symbols.queue_play_next,
-              label: 'Play next in queue',
+              label: 'Lire ensuite dans la file d'attente',
               onTap: () {
                 close();
                 ref.read(playbackProvider.notifier).playNext(video);
-                showSnack(context, 'Video will play next');
+                showSnack(context, 'La vidéo sera lue ensuite');
               },
             ),
           _WatchLaterTile(video: video, close: close, context: context),
           _MenuTile(
             icon: Symbols.playlist_add,
-            label: 'Save to playlist',
+            label: 'Enregistrer dans une playlist',
             onTap: () {
               close();
               showSaveToPlaylist(context, ref, video);
@@ -64,7 +64,7 @@ Future<void> showVideoMenu(
           if (downloadStarter != null && !video.isLive)
             _MenuTile(
               icon: Symbols.download,
-              label: 'Download video',
+              label: 'Télécharger la vidéo',
               onTap: () {
                 close();
                 downloadStarter!(context, ref, video);
@@ -81,7 +81,7 @@ Future<void> showVideoMenu(
           if (video.channelId != null)
             _MenuTile(
               icon: Symbols.account_box,
-              label: 'Go to channel',
+              label: 'Accéder à la chaîne',
               onTap: () {
                 close();
                 openChannel(context, ref, video.channelId!);
@@ -90,7 +90,7 @@ Future<void> showVideoMenu(
           if (onRemove != null)
             _MenuTile(
               icon: Symbols.delete,
-              label: removeLabel ?? 'Remove',
+              label: removeLabel ?? 'Retirer',
               onTap: () {
                 close();
                 onRemove();
@@ -133,11 +133,11 @@ class _WatchLaterTile extends ConsumerWidget {
     final saved = wl != null && ids.contains(wl.playlist.id);
     return _MenuTile(
       icon: Symbols.schedule,
-      label: saved ? 'Remove from Watch later' : 'Save to Watch later',
+      label: saved ? 'Retirer de « À regarder plus tard »' : 'Enregistrer dans « À regarder plus tard »',
       onTap: () async {
         close();
         await ref.read(libraryProvider).toggleWatchLater(video);
-        if (context.mounted) showSnack(context, saved ? 'Removed from Watch later' : 'Saved to Watch later');
+        if (context.mounted) showSnack(context, saved ? 'Retiré de « À regarder plus tard »' : 'Ajouté à « À regarder plus tard »');
       },
     );
   }
@@ -230,8 +230,8 @@ Future<String?> promptText(BuildContext context, {required String title, String?
         onSubmitted: (v) => Navigator.of(d).pop(v),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(d).pop(), child: const Text('Cancel')),
-        TextButton(onPressed: () => Navigator.of(d).pop(controller.text), child: const Text('Save')),
+        TextButton(onPressed: () => Navigator.of(d).pop(), child: const Text('Annuler')),
+        TextButton(onPressed: () => Navigator.of(d).pop(controller.text), child: const Text('Enregistrer')),
       ],
     ),
   );
