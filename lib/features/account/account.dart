@@ -178,7 +178,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
                     side: BorderSide(color: c.divider),
                   ),
                   icon: const Icon(Symbols.account_circle),
-                  label: const Text('Sign in (optional)'),
+                  label: const Text('Se connecter (facultatif)'),
                 ),
               ],
             ),
@@ -210,17 +210,17 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
                       final ok = await showDialog<bool>(
                         context: context,
                         builder: (d) => AlertDialog(
-                          title: const Text('Sign out?'),
-                          content: const Text('Your library on this device stays.'),
+                          title: const Text('Se déconnecter ?'),
+                          content: const Text('Votre bibliothèque sur cet appareil sera conservée.'),
                           actions: [
                             TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Annuler')),
-                            TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Sign out')),
+                            TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Se déconnecter')),
                           ],
                         ),
                       );
                       if (ok == true) await ref.read(authProvider.notifier).signOut();
                     },
-                    child: const Text('Sign out'),
+                    child: const Text('Se déconnecter'),
                   ),
                 ],
               ),
@@ -230,21 +230,21 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ),
       const Padding(
         padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-        child: Text('Your YouTube account', style: YtText.sectionTitle),
+        child: Text('Votre compte YouTube', style: YtText.sectionTitle),
       ),
       ListTile(
         leading: const Icon(Symbols.history, weight: 300),
-        title: const Text('YouTube history'),
-        onTap: () => open('FEhistory', 'YouTube history'),
+        title: const Text('Historique YouTube'),
+        onTap: () => open('FEhistory', 'Historique YouTube'),
       ),
       ListTile(
         leading: const Icon(Symbols.video_library, weight: 300),
-        title: const Text('YouTube playlists'),
+        title: const Text('Playlists YouTube'),
         onTap: () => open('FEplaylist_aggregation', 'Playlists'),
       ),
       ListTile(
         leading: const Icon(Symbols.schedule, weight: 300),
-        title: const Text('Watch later'),
+        title: const Text('À regarder plus tard'),
         onTap: () => openPlaylist(context, ref, 'WL'),
       ),
       ListTile(
@@ -254,7 +254,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ),
       ListTile(
         leading: const Icon(Symbols.subscriptions, weight: 300),
-        title: const Text('Import subscriptions from your account'),
+        title: const Text('Importer les abonnements de votre compte'),
         onTap: () => _importAccountSubscriptions(context, ref),
       ),
     ],
@@ -262,7 +262,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
 }
 
 Future<void> _importAccountSubscriptions(BuildContext context, WidgetRef ref) async {
-  showSnack(context, 'Importing subscriptions…');
+  showSnack(context, 'Importation des abonnements…');
   try {
     final yt = ref.read(innerTubeProvider);
     var page = await yt.subscribedChannels();
