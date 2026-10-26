@@ -56,8 +56,16 @@ class _SubscriptionsScreenState extends ConsumerState<SubscriptionsScreen> {
     final channels = <String, ChannelItem>{
       for (final channel in page.entries.allItems.whereType<ChannelItem>()) channel.id: channel,
     };
-    while (page.continuation != null && channels.length < 5000) {
-      page = await yt.browseContinuation(page.continuation!);
+    final seenContinuations = <String>{};
+    var pageCount = 0;
+    while (page.continuation != null && channels.length < 5000 && pageCount < 100) {
+      final continuation = page.continuation!;
+      if (!seenContinuations.add(continuation)) {
+        debugPrint('YouPipe: stopped repeated subscription continuation');
+        break;
+      }
+      pageCount++;
+      page = await yt.browseContinuation(continuation);
       final more = page.entries.allItems.whereType<ChannelItem>();
       if (more.isEmpty) break;
       for (final channel in more) {
@@ -254,7 +262,7 @@ class _ChannelsScreenState extends ConsumerState<ChannelsScreen> {
           await ref.read(libraryProvider).importSubscriptions(channels.values.toList());
         }
       }
-      await ref.read(subscriptionsFeedServiceProvider).refresh(force: true);
+      // Do not block this channel list on downloading every channel's video feed.
     } catch (e) {
       _syncError = e.toString();
       debugPrint('YouPipe: unable to refresh all subscriptions: $e');
