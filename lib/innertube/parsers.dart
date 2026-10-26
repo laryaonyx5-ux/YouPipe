@@ -376,7 +376,9 @@ YtItem? _shortsLockup(Json v) {
   return VideoItem(
     id: id,
     title: nav<String>(v, ['overlayMetadata', 'primaryText', 'content']) ?? '',
-    viewsText: nav<String>(v, ['overlayMetadata', 'secondaryText', 'content']) case final views? ? localizeViewsText(views) : null,
+    viewsText: nav<String>(v, ['overlayMetadata', 'secondaryText', 'content']) == null
+        ? null
+        : localizeViewsText(nav<String>(v, ['overlayMetadata', 'secondaryText', 'content'])!),
     thumbnail: _bestImage(nav(v, ['thumbnail'])) ?? _bestImage(nav(reel, ['thumbnail'])),
     isShort: true,
   );
@@ -388,7 +390,7 @@ YtItem? _reelItem(Json v) {
   return VideoItem(
     id: id,
     title: textOf(v['headline']) ?? '',
-    viewsText: textOf(v['viewCountText']) case final views? ? localizeViewsText(views) : null,
+    viewsText: textOf(v['viewCountText']) == null ? null : localizeViewsText(textOf(v['viewCountText'])!),
     thumbnail: _bestImage(v['thumbnail']),
     isShort: true,
   );
