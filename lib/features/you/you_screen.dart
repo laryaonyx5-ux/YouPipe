@@ -118,7 +118,7 @@ class YouScreen extends ConsumerWidget {
                     const Spacer(),
                     IconButton(
                       onPressed: () async {
-                        final name = await promptText(context, title: 'Nouvelle playlist', hint: 'Choisissez un titre');
+                        final name = await promptText(context, title: 'Nouvelle playlist", hint: 'Choisissez un titre");
                         if (name != null && name.trim().isNotEmpty) {
                           await ref.read(libraryProvider).createPlaylist(name.trim());
                         }
@@ -138,7 +138,7 @@ class YouScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   children: [
                     _PlaylistCard(
-                      title: 'Vidéos "J'aime"',
+                      title: "Vidéos \"J'aime\"",
                       subtitle: '${liked.length} videos',
                       thumbnail: liked.firstOrNull?.thumbnailOrDefault,
                       icon: Symbols.thumb_up,
@@ -147,7 +147,7 @@ class YouScreen extends ConsumerWidget {
                     for (final p in playlists)
                       _PlaylistCard(
                         title: p.playlist.name,
-                        subtitle: p.playlist.isWatchLater ? '${p.count} videos' : 'Private · ${p.count} videos',
+                        subtitle: p.playlist.isWatchLater ? '${p.count} videos" : 'Private · ${p.count} videos",
                         thumbnail: p.thumbnail,
                         icon: p.playlist.isWatchLater ? Symbols.schedule : null,
                         onTap: () => openLocalPlaylist(context, ref, p.playlist.id),
@@ -279,17 +279,17 @@ class HistoryScreen extends ConsumerWidget {
         actions: [
           if (history.isNotEmpty)
             IconButton(
-              tooltip: 'Effacer tout l'historique des vidéos regardées',
+              tooltip: "Effacer tout l'historique des vidéos regardées",
               icon: const Icon(Symbols.delete),
               onPressed: () async {
                 final ok = await showDialog<bool>(
                   context: context,
                   builder: (d) => AlertDialog(
-                    title: const Text('Effacer l'historique des vidéos regardées ?'),
-                    content: const Text('L'historique des vidéos regardées sera effacé de cet appareil.'),
+                    title: const Text("Effacer l'historique des vidéos regardées ?"),
+                    content: const Text("L'historique des vidéos regardées sera effacé de cet appareil."),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
-                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Effacer l'historique des vidéos regardées')),
+                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text("Effacer l'historique des vidéos regardées")),
                     ],
                   ),
                 );
@@ -316,9 +316,9 @@ class HistoryScreen extends ConsumerWidget {
                     h.video,
                     onRemove: () {
                       unawaited(lib.removeFromHistory(h.video.id));
-                      showSnack(context, 'Retiré de l'historique');
+                      showSnack(context, "Retiré de l'historique");
                     },
-                    removeLabel: 'Retirer de l'historique',
+                    removeLabel: "Retirer de l'historique",
                   ),
                   _ => const SizedBox.shrink(),
                 },
