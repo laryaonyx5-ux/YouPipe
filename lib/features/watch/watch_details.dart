@@ -246,11 +246,11 @@ class _Actions extends ConsumerWidget {
                 ),
             const SizedBox(width: 8),
           ],
-          PillButton(icon: Symbols.playlist_add, label: 'Save', onTap: () => showSaveToPlaylist(context, ref, video)),
+          PillButton(icon: Symbols.playlist_add, label: 'Enregistrer', onTap: () => showSaveToPlaylist(context, ref, video)),
           const SizedBox(width: 8),
           PillButton(
             icon: Symbols.schedule,
-            label: 'Watch later',
+            label: 'À regarder plus tard',
             onTap: () async {
               await ref.read(libraryProvider).toggleWatchLater(video);
               if (context.mounted) showSnack(context, 'Watch later updated');
@@ -302,7 +302,7 @@ class _CommentsTeaser extends ConsumerWidget {
                     TextSpan(
                       children: [
                         const TextSpan(
-                          text: 'Comments',
+                          text: 'Commentaires',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                         if (count != null)
@@ -564,7 +564,7 @@ class _CommentsPanelState extends ConsumerState<CommentsPanel> {
           title: Text.rich(
             TextSpan(
               children: [
-                const TextSpan(text: 'Comments'),
+                const TextSpan(text: 'Commentaires'),
                 if (count != null)
                   TextSpan(
                     text: '  ${shortCount(count)}',
