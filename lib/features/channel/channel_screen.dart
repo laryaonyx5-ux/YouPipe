@@ -220,7 +220,7 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
         child: Padding(padding: EdgeInsets.all(32), child: LoadingView()),
       );
     } else if (list.hasError && entries.isEmpty) {
-      body = SliiverToBoxAdapter(
+      body = SliverToBoxAdapter(
         child: ErrorView(error: list.error!, compact: true, onRetry: () => ref.invalidate(channelListProvider(key))),
       );
     } else if (entries.isEmpty) {
@@ -238,7 +238,7 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
     } else if (isShorts) {
       body = SliverPadding(
         padding: const EdgeInsets.all(4),
-        sliver: SliiverGrid.builder(
+        sliver: SliverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
@@ -405,7 +405,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
       return CustomScrollView(
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [const SliiverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator()))],
+        slivers: [const SliverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator()))],
       );
     }
     if (_error != null && _posts.isEmpty) {
