@@ -48,7 +48,6 @@ const Map<String, _ItemParser> _parsers = {
 List<YtItem> parseItems(Object? root) {
   final out = <YtItem>[];
   final seen = <YtItem>{};
-  final seenPosts = <String>{};
   void walk(Object? o) {
     if (o is Map) {
       for (final e in o.entries) {
@@ -161,6 +160,7 @@ CommunityPost? _communityPost(Json node) {
 List<FeedEntry> parseFeed(Object? root) {
   final out = <FeedEntry>[];
   final seen = <YtItem>{};
+  final seenPosts = <String>{};
   void walk(Object? o) {
     if (o is Map) {
       for (final e in o.entries) {
