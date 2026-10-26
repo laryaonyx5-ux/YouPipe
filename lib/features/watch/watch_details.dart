@@ -209,7 +209,7 @@ class _Actions extends ConsumerWidget {
                   onTap: () async {
                     await ref.read(libraryProvider).setLiked(video, !liked);
                     if (context.mounted) {
-                      showSnack(context, liked ? 'Removed from Liked videos' : 'Added to Liked videos');
+                      showSnack(context, liked ? 'Retiré des vidéos aimées' : 'Ajouté aux vidéos aimées');
                     }
                   },
                   child: Row(
@@ -241,7 +241,7 @@ class _Actions extends ConsumerWidget {
             downloadPillBuilder?.call(context, ref, video) ??
                 PillButton(
                   icon: Symbols.download,
-                  label: 'Download',
+                  label: 'Télécharger',
                   onTap: () => downloadStarter!(context, ref, video),
                 ),
             const SizedBox(width: 8),
@@ -253,7 +253,7 @@ class _Actions extends ConsumerWidget {
             label: 'À regarder plus tard',
             onTap: () async {
               await ref.read(libraryProvider).toggleWatchLater(video);
-              if (context.mounted) showSnack(context, 'Watch later updated');
+              if (context.mounted) showSnack(context, 'Liste « À regarder plus tard » mise à jour');
             },
           ),
         ],
@@ -280,7 +280,7 @@ class _CommentsTeaser extends ConsumerWidget {
       // Comments are turned off for this video.
       return Padding(
         padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
-        child: Text('Comments are turned off.', style: TextStyle(color: c.textSecondary, fontSize: 13)),
+        child: Text('Les commentaires sont désactivés.', style: TextStyle(color: c.textSecondary, fontSize: 13)),
       );
     }
     return Padding(
@@ -316,7 +316,7 @@ class _CommentsTeaser extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   if (first == null)
-                    Text('Loading comments…', style: TextStyle(color: c.textSecondary, fontSize: 13))
+                    Text('Chargement des commentaires…', style: TextStyle(color: c.textSecondary, fontSize: 13))
                   else
                     Row(
                       children: [
@@ -472,7 +472,7 @@ class DescriptionPanel extends ConsumerWidget {
               ),
               if (info != null && info.chapters.isNotEmpty) ...[
                 const SizedBox(height: 20),
-                const Text('Chapters', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                const Text('Chapitres', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
                 SizedBox(
                   height: 160,
@@ -748,7 +748,7 @@ class _Replies extends ConsumerWidget {
           TextButton(
             onPressed: () => ref.read(repliesProvider(token).notifier).loadMore(),
             style: TextButton.styleFrom(foregroundColor: context.yt.link),
-            child: const Text('Show more replies'),
+            child: const Text('Afficher plus de réponses'),
           ),
       ],
     );
