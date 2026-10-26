@@ -81,9 +81,9 @@ class HomeScreen extends ConsumerWidget {
                         hasScrollBody: false,
                         child: EmptyView(
                           icon: Symbols.search,
-                          title: 'Try searching to get started',
+                          title: 'Lancez une recherche pour commencer',
                           message: 'Start watching videos to help us build a feed of videos you\'ll love.',
-                          action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Search')),
+                          action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Rechercher')),
                         ),
                       )
                     else
@@ -124,11 +124,11 @@ class _StartCard extends ConsumerWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Your feed, on this device', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        const Text('Votre fil, sur cet appareil', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 6),
         Text(
           'YouPipe builds Home from what you watch and the channels you subscribe to, all stored on this device. '
-          'Until then, here are popular videos.',
+          'En attendant, voici des vidéos populaires.',
           style: TextStyle(color: context.yt.textSecondary, fontSize: 13),
         ),
       ],
