@@ -6,6 +6,7 @@ library;
 
 import 'json_nav.dart';
 import 'models.dart';
+import '../util/format.dart';
 
 /// Branches that never hold feed items: large chrome, and every kind of ad (YouPipe never shows ads).
 const _skip = {
@@ -246,8 +247,10 @@ YtItem? _video(Json v) {
     ),
     thumbnail: _bestImage(v['thumbnail']) ?? 'https://i.ytimg.com/vi/$id/hqdefault.jpg',
     durationText: length,
-    viewsText: views ?? info.firstOrNull,
-    publishedText: textOf(v['publishedTimeText']) ?? (info.length > 1 ? info.last : null),
+    viewsText: views == null ? (info.firstOrNull == null ? null : localizeViewsText(info.firstOrNull!)) : localizeViewsText(views),
+    publishedText: (textOf(v['publishedTimeText']) ?? (info.length > 1 ? info.last : null)) == null
+        ? null
+        : localizeRelativeText(longAge(textOf(v['publishedTimeText']) ?? info.last)),
     isLive: live,
   );
 }
@@ -316,11 +319,11 @@ YtItem? _lockup(Json v) {
 final _viewsPattern = RegExp(r'\b(views?|watching|No views)\b', caseSensitive: false);
 
 /// YouTube's short ages ("3mo ago", "1y ago", "5d ago") in the long form the rest of the app uses ("3 months ago").
-String longAge(String text) => text.replaceAllMapped(_shortAge, (m) {
+String longAge(String text) => localizeRelativeText(text.replaceAllMapped(_shortAge, (m) {
   final n = int.parse(m[1]!);
   final unit = _shortUnits[m[2]!]!;
   return '$n $unit${n == 1 ? '' : 's'} ago';
-});
+}));
 
 final _shortAge = RegExp(r'\b(\d+)\s?(mo|y|w|d|h|min|m|s) ago\b');
 const _shortUnits = {
