@@ -68,7 +68,7 @@ class ChannelScreen extends ConsumerWidget {
                 children: [
                   for (final t in tabs)
                     if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
-                      _ChannelPostsWebTab(channelId: channelId)
+                      _ChannelPostsTab(channelId: channelId, tab: t)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
@@ -164,7 +164,7 @@ class _Header extends ConsumerWidget {
   }
 }
 
-class _TabBarDelegate extends SliverPersistentHeaderDelegate {
+class _TabBarDelegate extends SliiverPersistentHeaderDelegate {
   _TabBarDelegate(this.tabBar, this.color);
 
   final TabBar tabBar;
@@ -454,7 +454,7 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
         controller: _scroll,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          SliverPadding(
+          SliiverPadding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
