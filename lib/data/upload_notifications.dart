@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
@@ -57,6 +58,15 @@ class UploadNotificationService {
         ),
         onDidReceiveNotificationResponse: _onResponse,
       );
+      final launch = await _plugin.getNotificationAppLaunchDetails();
+      final payload = launch?.notificationResponse?.payload;
+      if (launch?.didNotificationLaunchApp == true && payload != null) {
+        final data = jsonDecode(payload) as Map<String, dynamic>;
+        UploadNotificationService.pendingVideo = VideoItem.fromJson({
+          'id': data['id'], 'title': data['title'], 'channelId': data['channelId'],
+          'channelName': data['channelName'], 'thumbnail': data['thumbnail'],
+        });
+      }
       _initialized = true;
     }
     final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
@@ -145,13 +155,28 @@ class UploadNotificationService {
         channelName: video.channelName,
         thumbnail: video.thumbnail,
       );
+      BigPictureStyleInformation? pictureStyle;
+      try {
+        final imageResponse = await dio.get<List<int>>(
+          video.thumbnail ?? 'https://i.ytimg.com/vi/${video.id}/hqdefault.jpg',
+          options: Options(responseType: ResponseType.bytes, receiveTimeout: const Duration(seconds: 8)),
+        );
+        final imageBytes = Uint8List.fromList(imageResponse.data ?? const <int>[]);
+        if (imageBytes.isNotEmpty) {
+          pictureStyle = BigPictureStyleInformation(
+            ByteArrayAndroidBitmap(imageBytes),
+            contentTitle: video.channelName,
+            summaryText: video.title,
+          );
+        }
+      } catch (e) { debugPrint('YouPipe: notification thumbnail failed: $e'); }
       final details = AndroidNotificationDetails(
         'youpipe_uploads',
         'Nouvelles vidéos',
         channelDescription: 'Nouvelles vidéos des chaînes auxquelles vous êtes abonné',
         importance: Importance.high,
         priority: Priority.high,
-        styleInformation: BigTextStyleInformation(video.title, contentTitle: video.channelName),
+        styleInformation: pictureStyle ?? BigTextStyleInformation(video.title, contentTitle: video.channelName),
         actions: const [
           AndroidNotificationAction('watch', 'Regarder', showsUserInterface: true),
           AndroidNotificationAction('watch_later', 'À regarder plus tard', showsUserInterface: false),
@@ -172,7 +197,8 @@ class UploadNotificationService {
         }),
       );
     }
-    await prefs.setStringList(_seenKey, {...seen, ...current}.toList()..take(3000).toList());
+    final updatedSeen = {...seen, ...current}.toList();
+    await prefs.setStringList(_seenKey, updatedSeen.length > 3000 ? updatedSeen.sublist(updatedSeen.length - 3000) : updatedSeen);
   }
 
   void _onResponse(NotificationResponse response) {
