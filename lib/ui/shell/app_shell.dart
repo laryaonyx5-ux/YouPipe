@@ -586,7 +586,7 @@ class _MiniPlayerState extends ConsumerState<_MiniPlayer> {
     );
 
     Widget playPause(bool playing, VoidCallback toggle) =>
-        button(playing ? Symbols.pause : Symbols.play_arrow, toggle, size: 36, tooltip: playing ? 'Pause' : 'Play');
+        button(playing ? Symbols.pause : Symbols.play_arrow, toggle, size: 36, tooltip: playing ? 'Mettre en pause' : 'Lire');
 
     final Widget center;
     if (remote != null) {
@@ -639,17 +639,17 @@ class _MiniPlayerState extends ConsumerState<_MiniPlayer> {
                         Positioned(
                           right: 0,
                           top: 0,
-                          child: button(Symbols.close, () => playback.stop(), size: 22, tooltip: 'Close'),
+                          child: button(Symbols.close, () => playback.stop(), size: 22, tooltip: 'Fermer'),
                         ),
                         Center(
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              button(Symbols.skip_previous, () => playback.previous(), tooltip: 'Previous'),
+                              button(Symbols.skip_previous, () => playback.previous(), tooltip: 'Précédent'),
                               const SizedBox(width: 4),
                               center,
                               const SizedBox(width: 4),
-                              button(Symbols.skip_next, () => playback.next(), tooltip: 'Next'),
+                              button(Symbols.skip_next, () => playback.next(), tooltip: 'Suivant'),
                             ],
                           ),
                         ),
