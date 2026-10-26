@@ -257,7 +257,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
     final videos =
         (isLiked ? ref.watch(likedVideosProvider) : ref.watch(localPlaylistVideosProvider(id))).value ??
         const <VideoItem>[];
-    final title = isLiked ? 'Liked videos' : playlist?.name ?? '';
+    final title = isLiked ? 'Vidéos "J'aime"' : playlist?.name ?? '';
     final userMade = !isLiked && playlist != null && !playlist.isWatchLater;
     final lib = ref.read(libraryProvider);
     void remove(VideoItem v) {
@@ -281,7 +281,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
                   final ok = await showDialog<bool>(
                     context: context,
                     builder: (dialog) => AlertDialog(
-                      title: const Text('Delete playlist?'),
+                      title: const Text('Supprimer la playlist ?'),
                       content: Text('"${playlist.name}" will be permanently deleted.'),
                       actions: [
                         TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Cancel')),
@@ -296,7 +296,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
               },
               itemBuilder: (_) => const [
                 PopupMenuItem(value: 'rename', child: Text('Rename')),
-                PopupMenuItem(value: 'delete', child: Text('Delete playlist')),
+                PopupMenuItem(value: 'delete', child: Text('Supprimer la playlist')),
               ],
             ),
         ],
@@ -322,8 +322,8 @@ class LocalPlaylistScreen extends ConsumerWidget {
                 hasScrollBody: false,
                 child: EmptyView(
                   icon: isLiked ? Symbols.thumb_up : Symbols.video_library,
-                  title: 'No videos in this playlist yet',
-                  message: isLiked ? 'Videos you like will show up here' : 'Save videos from their ⋮ menu',
+                  title: 'Cette playlist ne contient pas encore de vidéos',
+                  message: isLiked ? 'Les vidéos que vous aimez apparaîtront ici' : 'Enregistrez des vidéos depuis leur menu ⋮',
                 ),
               )
             else if (userMade || playlist?.isWatchLater == true)
