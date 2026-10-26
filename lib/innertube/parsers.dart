@@ -150,7 +150,7 @@ CommunityPost? _communityPost(Json node) {
     id: id ?? '${author ?? 'post'}-${text.hashCode}',
     text: text.trim(),
     author: author,
-    avatar: avatar,
+    authorAvatar: avatar,
     publishedText: published,
     images: imageUrls,
   );
