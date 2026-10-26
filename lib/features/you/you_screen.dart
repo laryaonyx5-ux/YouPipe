@@ -49,7 +49,7 @@ class YouScreen extends ConsumerWidget {
                 foregroundColor: c.textPrimary,
                 visualDensity: VisualDensity.compact,
               ),
-              child: const Text('View all'),
+              child: const Text('Tout afficher'),
             ),
         ],
       ),
@@ -77,9 +77,9 @@ class YouScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('You', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                              const Text('Vous', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
                               Text(
-                                'Your library lives on this device',
+                                'Votre bibliothèque est stockée sur cet appareil',
                                 style: TextStyle(color: c.textSecondary, fontSize: 13),
                               ),
                             ],
@@ -90,13 +90,13 @@ class YouScreen extends ConsumerWidget {
                   ),
             ),
             SliverToBoxAdapter(
-              child: sectionTitle('History', history.isEmpty ? null : () => openHistory(context, ref)),
+              child: sectionTitle('Historique', history.isEmpty ? null : () => openHistory(context, ref)),
             ),
             SliverToBoxAdapter(
               child: history.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text("Videos you watch will show up here", style: TextStyle(color: c.textSecondary)),
+                      child: Text("Les vidéos que vous regardez apparaîtront ici", style: TextStyle(color: c.textSecondary)),
                     )
                   : SizedBox(
                       height: 160 * 9 / 16 + 70,
@@ -118,13 +118,13 @@ class YouScreen extends ConsumerWidget {
                     const Spacer(),
                     IconButton(
                       onPressed: () async {
-                        final name = await promptText(context, title: 'New playlist', hint: 'Choose a title');
+                        final name = await promptText(context, title: 'Nouvelle playlist', hint: 'Choisissez un titre');
                         if (name != null && name.trim().isNotEmpty) {
                           await ref.read(libraryProvider).createPlaylist(name.trim());
                         }
                       },
                       icon: const Icon(Symbols.add),
-                      tooltip: 'New playlist',
+                      tooltip: 'Nouvelle playlist',
                     ),
                   ],
                 ),
@@ -138,7 +138,7 @@ class YouScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   children: [
                     _PlaylistCard(
-                      title: 'Liked videos',
+                      title: 'Vidéos "J'aime"',
                       subtitle: '${liked.length} videos',
                       thumbnail: liked.firstOrNull?.thumbnailOrDefault,
                       icon: Symbols.thumb_up,
@@ -175,18 +175,18 @@ class YouScreen extends ConsumerWidget {
                   ),
                 ListTile(
                   leading: const Icon(Symbols.subscriptions, weight: 300),
-                  title: const Text('Your subscriptions'),
+                  title: const Text('Vos abonnements'),
                   onTap: () => openChannels(context, ref),
                 ),
                 ListTile(
                   leading: const Icon(Symbols.history, weight: 300),
-                  title: const Text('History'),
+                  title: const Text('Historique'),
                   onTap: () => openHistory(context, ref),
                 ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Symbols.settings, weight: 300),
-                  title: const Text('Settings'),
+                  title: const Text('Paramètres'),
                   onTap: () => openSettings(context, ref),
                 ),
                 const SizedBox(height: 24),
@@ -260,7 +260,7 @@ class HistoryScreen extends ConsumerWidget {
       final d = today.difference(day).inDays;
       if (d <= 0) return 'Today';
       if (d == 1) return 'Yesterday';
-      if (d < 7) return 'This week';
+      if (d < 7) return 'Cette semaine';
       return t.year == now.year ? months[t.month - 1] : '${months[t.month - 1]} ${t.year}';
     }
 
@@ -274,22 +274,22 @@ class HistoryScreen extends ConsumerWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: const Text('Historique'),
         leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
         actions: [
           if (history.isNotEmpty)
             IconButton(
-              tooltip: 'Clear all watch history',
+              tooltip: 'Effacer tout l'historique des vidéos regardées',
               icon: const Icon(Symbols.delete),
               onPressed: () async {
                 final ok = await showDialog<bool>(
                   context: context,
                   builder: (d) => AlertDialog(
-                    title: const Text('Clear watch history?'),
-                    content: const Text('Your watch history will be cleared from this device.'),
+                    title: const Text('Effacer l'historique des vidéos regardées ?'),
+                    content: const Text('L'historique des vidéos regardées sera effacé de cet appareil.'),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
-                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Clear watch history')),
+                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Effacer l'historique des vidéos regardées')),
                     ],
                   ),
                 );
@@ -302,7 +302,7 @@ class HistoryScreen extends ConsumerWidget {
         child: history.isEmpty
             ? const EmptyView(
                 icon: Symbols.history,
-                title: 'Keep track of what you watch',
+                title: 'Gardez une trace des vidéos que vous regardez',
                 message: 'Watch history isn\'t viewable when empty.',
               )
             : ListView.builder(
@@ -316,9 +316,9 @@ class HistoryScreen extends ConsumerWidget {
                     h.video,
                     onRemove: () {
                       unawaited(lib.removeFromHistory(h.video.id));
-                      showSnack(context, 'Removed from watch history');
+                      showSnack(context, 'Retiré de l'historique');
                     },
-                    removeLabel: 'Remove from watch history',
+                    removeLabel: 'Retirer de l'historique',
                   ),
                   _ => const SizedBox.shrink(),
                 },
