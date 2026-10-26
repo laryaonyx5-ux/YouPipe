@@ -10,7 +10,7 @@ import '../../innertube/models.dart';
 import '../../providers.dart';
 import '../../ui/widgets/common.dart';
 
-/// Reads subscriptions from a Google Takeout `subscriptions.csv` ("Channel Id,Channel Url,Channel Title") or a
+/// Reads subscriptions from a Google Takeout `subscriptions.csv` ("Identifiant de chaîne,URL de chaîne,Titre de chaîne") or a
 /// NewPipe export (`{"subscriptions": [{"url": …/channel/UC…, "name": …}]}`).
 List<ChannelItem> parseSubscriptionsFile(String text) {
   final trimmed = text.trimLeft();
