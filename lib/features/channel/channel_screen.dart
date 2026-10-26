@@ -220,7 +220,7 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
         child: Padding(padding: EdgeInsets.all(32), child: LoadingView()),
       );
     } else if (list.hasError && entries.isEmpty) {
-      body = SliiverToBoxAdapter(
+      body = SliverToBoxAdapter(
         child: ErrorView(error: list.error!, compact: true, onRetry: () => ref.invalidate(channelListProvider(key))),
       );
     } else if (entries.isEmpty) {
@@ -238,9 +238,9 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
     } else if (isShorts) {
       body = SliverPadding(
         padding: const EdgeInsets.all(4),
-        sliver: SliverGrid.builder(
+        sliver: SliiverGrid.builder(
           // 3 across on phones, more on tablets and TVs.
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          gridDelegate: const SliiverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 150,
             childAspectRatio: 9 / 16,
             mainAxisSpacing: 4,
@@ -457,16 +457,16 @@ class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
+              delegate: SliiverChildBuilderDelegate(
                 (context, index) => _CommunityPostCard(post: _posts[index]),
                 childCount: _posts.length,
               ),
             ),
           ),
           if (_loadingMore)
-            const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+            const SliiverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
           if (_error != null)
-            SliiverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Center(
                 child: TextButton(onPressed: _loadMore, child: const Text('Erreur de chargement — réessayer')),
               ),
