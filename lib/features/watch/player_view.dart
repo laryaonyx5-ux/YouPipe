@@ -188,7 +188,7 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
     final s = ref.read(settingsProvider);
     ref.read(settingsProvider.notifier).update(s.copyWith(autoplay: !s.autoplay));
     if (s.autoplay) ref.read(upNextCountdownProvider.notifier).cancel();
-    _showFlash(s.autoplay ? 'Autoplay is off' : 'La lecture automatique est activée');
+    _showFlash(s.autoplay ? 'La lecture automatique est désactivée' : 'La lecture automatique est activée');
     _scheduleHide();
   }
 
