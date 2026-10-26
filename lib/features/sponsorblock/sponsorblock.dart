@@ -219,8 +219,8 @@ Widget sponsorBlockSettings(BuildContext context, WidgetRef ref) {
               value: s.actions[c] ?? c.defaultAction,
               underline: const SizedBox.shrink(),
               items: const [
-                DropdownMenuItem(value: SbAction.skip, child: Text('Skip')),
-                DropdownMenuItem(value: SbAction.show, child: Text('Show')),
+                DropdownMenuItem(value: SbAction.skip, child: Text('Ignorer')),
+                DropdownMenuItem(value: SbAction.show, child: Text('Afficher')),
                 DropdownMenuItem(value: SbAction.off, child: Text('Désactivé')),
               ],
               onChanged: (a) {
