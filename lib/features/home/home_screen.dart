@@ -82,7 +82,7 @@ class HomeScreen extends ConsumerWidget {
                         child: EmptyView(
                           icon: Symbols.search,
                           title: 'Lancez une recherche pour commencer',
-                          message: 'Start watching videos to help us build a feed of videos you\'ll love.',
+                          message: "Regardez des vidéos pour créer un fil qui vous correspond.",
                           action: FilledButton(onPressed: () => openSearch(context, ref), child: const Text('Rechercher')),
                         ),
                       )
