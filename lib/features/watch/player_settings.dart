@@ -195,7 +195,7 @@ Future<void> showPlayerSettings(BuildContext context, WidgetRef ref) => showModa
             _SettingTile(
               icon: Symbols.slow_motion_video,
               label: 'Vitesse de lecture',
-              value: (c?.value.playbackSpeed ?? 1) == 1 ? 'Normal' : '${c!.value.playbackSpeed}x',
+              value: (c?.value.playbackSpeed ?? 1) == 1 ? 'Normale' : '${c!.value.playbackSpeed}x',
               onTap: () {
                 Navigator.of(sheet).pop();
                 _showSpeed(context, ref);
@@ -336,7 +336,7 @@ void _showSpeed(BuildContext context, WidgetRef ref) {
     title: 'Vitesse de lecture',
     selected: c?.value.playbackSpeed ?? 1,
     options: [
-      for (final s in const [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]) (s, s == 1 ? 'Normal' : '${s}x', null),
+      for (final s in const [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]) (s, s == 1 ? 'Normale' : '${s}x', null),
     ],
     onSelect: (s) => c?.setPlaybackSpeed(s),
   );
