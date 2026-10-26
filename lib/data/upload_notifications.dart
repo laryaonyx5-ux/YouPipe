@@ -66,6 +66,11 @@ class UploadNotificationService {
           'id': data['id'], 'title': data['title'], 'channelId': data['channelId'],
           'channelName': data['channelName'], 'thumbnail': data['thumbnail'],
         });
+        final pending = UploadNotificationService.pendingVideo;
+        if (pending != null && UploadNotificationService.onOpenVideo != null) {
+          UploadNotificationService.pendingVideo = null;
+          UploadNotificationService.onOpenVideo!(pending);
+        }
       }
       _initialized = true;
     }
@@ -155,13 +160,6 @@ class UploadNotificationService {
     }
     newRows.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
     for (final video in newRows.take(10)) {
-      final item = VideoItem(
-        id: video.id,
-        title: video.title,
-        channelId: video.channelId,
-        channelName: video.channelName,
-        thumbnail: video.thumbnail,
-      );
       BigPictureStyleInformation? pictureStyle;
       try {
         final imageResponse = await dio.get<List<int>>(
