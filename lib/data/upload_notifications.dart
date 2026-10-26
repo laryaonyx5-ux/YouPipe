@@ -85,6 +85,13 @@ class UploadNotificationService {
       constraints: Constraints(networkType: NetworkType.connected),
       existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
     );
+    // Establish the initial baseline now instead of waiting for the first periodic run.
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_enabledKey) ?? true) {
+      final db = AppDatabase();
+      await checkUploads(db, prefs, _plugin);
+      await db.close();
+    }
   }
 
   Future<void> setEnabled(bool enabled) async {
@@ -230,7 +237,9 @@ class UploadNotificationService {
     final data = jsonDecode(payload) as Map<String, dynamic>;
     final video = _videoFromPayload(data);
     final db = AppDatabase();
-    await LibraryRepository(db).toggleWatchLater(video);
+    final library = LibraryRepository(db);
+    final playlistId = await library.watchLaterId();
+    await library.addToPlaylist(playlistId, video);
     await db.close();
   }
 
