@@ -78,14 +78,14 @@ class SettingsScreen extends ConsumerWidget {
           children: [
             header('General'),
             ListTile(
-              title: const Text('Appearance'),
+              title: const Text('Apparence'),
               subtitle: Text(switch (s.themeMode) {
                 ThemeMode.system => 'Utiliser le thème de l'appareil',
                 ThemeMode.dark => 'Thème sombre',
                 ThemeMode.light => 'Thème clair',
               }),
               onTap: () async {
-                final m = await pick('Appearance', {
+                final m = await pick('Apparence', {
                   ThemeMode.system: 'Utiliser le thème de l'appareil',
                   ThemeMode.dark: 'Thème sombre',
                   ThemeMode.light: 'Thème clair',
@@ -94,23 +94,23 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: const Text('Language'),
+              title: const Text('Langue'),
               subtitle: Text(_languages[s.hl] ?? s.hl),
               onTap: () async {
-                final v = await pick('Language', _languages, s.hl);
+                final v = await pick('Langue', _languages, s.hl);
                 if (v != null) await ctl.update(s.copyWith(hl: v));
               },
             ),
             ListTile(
-              title: const Text('Location'),
+              title: const Text('Région'),
               subtitle: Text(_regions[s.gl] ?? s.gl),
               onTap: () async {
-                final v = await pick('Location', _regions, s.gl);
+                final v = await pick('Région', _regions, s.gl);
                 if (v != null) await ctl.update(s.copyWith(gl: v));
               },
             ),
             SwitchListTile(
-              title: const Text('Picture-in-picture'),
+              title: const Text('Image dans l'image'),
               subtitle: const Text('Continuer à regarder dans une petite fenêtre en quittant l'application'),
               value: s.pip,
               onChanged: (v) => ctl.update(s.copyWith(pip: v)),
