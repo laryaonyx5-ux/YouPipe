@@ -334,7 +334,7 @@ class _ShortPageState extends ConsumerState<_ShortPage> {
                           child: Text(
                             _error is VideoUnavailable
                                 ? (_error as VideoUnavailable).friendly
-                                : 'Couldn\'t load this Short',
+                                : "Impossible de charger ce Short",
                             textAlign: TextAlign.center,
                             style: const TextStyle(color: Colors.white),
                           ),
@@ -429,10 +429,10 @@ class _Rail extends ConsumerWidget {
     );
     return Column(
       children: [
-        action(Symbols.thumb_up, likes == null ? 'J'aime' : compactCount(likes + (liked ? 1 : 0)), () {
+        action(Symbols.thumb_up, likes == null ? "J'aime" : compactCount(likes + (liked ? 1 : 0)), () {
           ref.read(libraryProvider).setLiked(item, !liked);
         }, filled: liked),
-        action(Symbols.thumb_down, votes == null ? 'Je n'aime pas' : compactCount(votes.dislikes), () {}, filled: false),
+        action(Symbols.thumb_down, votes == null ? "Je n'aime pas" : compactCount(votes.dislikes), () {}, filled: false),
         action(Symbols.comment, 'Commentaires', () => _showComments(context, info.videoId)),
         action(Symbols.share, 'Partager', () => shareVideo(item)),
         action(Symbols.more_horiz, '', () => showVideoMenu(context, ref, item)),
@@ -505,7 +505,7 @@ class _Meta extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    subscribed ? 'Abonné' : 'S'abonner',
+                    subscribed ? 'Abonné' : "S'abonner",
                     style: TextStyle(
                       color: subscribed ? Colors.white : YtColors.dark.onSubscribe,
                       fontSize: 13,
