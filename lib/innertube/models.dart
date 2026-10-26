@@ -248,6 +248,39 @@ class PlaylistPage {
   PlaylistItem get asItem => PlaylistItem(id: id, title: title, thumbnail: thumbnail, channelName: owner);
 }
 
+/// A native YouTube Community post (text, images and poll options).
+class CommunityPost {
+  const CommunityPost({
+    required this.id,
+    required this.text,
+    this.author,
+    this.authorAvatar,
+    this.publishedText,
+    this.images = const [],
+    this.pollOptions = const [],
+    this.likeCount,
+    this.commentCount,
+  });
+
+  final String id;
+  final String text;
+  final String? author;
+  final String? authorAvatar;
+  final String? publishedText;
+  final List<String> images;
+  final List<String> pollOptions;
+  final String? likeCount;
+  final String? commentCount;
+}
+
+/// A page of channel posts and its native InnerTube continuation token.
+class CommunityPostsPage {
+  const CommunityPostsPage(this.posts, this.continuation);
+
+  final List<CommunityPost> posts;
+  final String? continuation;
+}
+
 class AccountInfo {
   const AccountInfo({required this.name, this.email, this.handle, this.photo});
 
