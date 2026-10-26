@@ -90,8 +90,8 @@ class AuthController extends AsyncNotifier<AuthState> {
 /// only reads the resulting session cookie.
 const _loginUrl =
     'https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true'
-    '&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den'
-    '%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en';
+    '&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Dfr'
+    '%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=fr';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -213,7 +213,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
                           title: const Text('Sign out?'),
                           content: const Text('Your library on this device stays.'),
                           actions: [
-                            TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
+                            TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Annuler')),
                             TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Sign out')),
                           ],
                         ),
