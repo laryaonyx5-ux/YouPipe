@@ -11,15 +11,15 @@ import '../../ui/widgets/common.dart';
 final settingsExtraSections = <Widget Function(BuildContext, WidgetRef)>[];
 
 const _languages = {
-  'en": 'English",
+  'en': 'English',
   'hi': 'हिन्दी',
   'ml': 'മലയാളം',
   'ta': 'தமிழ்',
-  'es": 'Espagnol",
-  'fr": 'Français",
-  'de": 'Deutsch",
-  'pt": 'Portugais",
-  'it": 'Italiano",
+  'es': 'Espagnol',
+  'fr': 'Français',
+  'de': 'Deutsch',
+  'pt': 'Portugais',
+  'it': 'Italiano',
   'ja': '日本語',
   'ko': '한국어',
   'ar': 'العربية',
@@ -27,19 +27,19 @@ const _languages = {
 };
 
 const _regions = {
-  'US": 'États-Unis",
-  'GB": 'Royaume-Uni",
-  'IE": 'Ireland",
-  'IN": 'India",
-  'CA": 'Canada",
-  'AU": 'Australia",
-  'DE": 'Germany",
-  'FR": 'France",
-  'ES": 'Spain",
-  'BR": 'Brazil",
-  'JP": 'Japan",
-  'KR": 'Corée du Sud",
-  'AE": 'Émirats arabes unis",
+  'US': 'États-Unis',
+  'GB': 'Royaume-Uni',
+  'IE': 'Ireland',
+  'IN': 'India',
+  'CA': 'Canada',
+  'AU': 'Australia',
+  'DE': 'Germany',
+  'FR': 'France',
+  'ES': 'Spain',
+  'BR': 'Brazil',
+  'JP': 'Japan',
+  'KR': 'Corée du Sud',
+  'AE': 'Émirats arabes unis',
 };
 
 class SettingsScreen extends ConsumerWidget {
@@ -80,13 +80,13 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               title: const Text('Apparence'),
               subtitle: Text(switch (s.themeMode) {
-                ThemeMode.system => "Utiliser le thème de l'appareil",
+                ThemeMode.system => 'Utiliser le thème de l'appareil',
                 ThemeMode.dark => 'Thème sombre',
                 ThemeMode.light => 'Thème clair',
               }),
               onTap: () async {
                 final m = await pick('Apparence', {
-                  ThemeMode.system: "Utiliser le thème de l'appareil",
+                  ThemeMode.system: 'Utiliser le thème de l'appareil',
                   ThemeMode.dark: 'Thème sombre',
                   ThemeMode.light: 'Thème clair',
                 }, s.themeMode);
@@ -110,8 +110,8 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
             SwitchListTile(
-              title: const Text("Image dans l'image"),
-              subtitle: const Text("Continuer à regarder dans une petite fenêtre en quittant l'application"),
+              title: const Text('Image dans l'image'),
+              subtitle: const Text('Continuer à regarder dans une petite fenêtre en quittant l'application'),
               value: s.pip,
               onChanged: (v) => ctl.update(s.copyWith(pip: v)),
             ),
@@ -134,26 +134,26 @@ class SettingsScreen extends ConsumerWidget {
               ),
             for (final section in settingsExtraSections) section(context, ref),
             const Divider(),
-            header("Gérer tout l'historique"),
+            header('Gérer tout l'historique'),
             SwitchListTile(
-              title: const Text("Suspendre l'historique des vidéos regardées"),
+              title: const Text('Suspendre l'historique des vidéos regardées'),
               value: !s.saveHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveHistory: !v)),
             ),
             SwitchListTile(
-              title: const Text("Suspendre l'historique des recherches"),
+              title: const Text('Suspendre l'historique des recherches'),
               value: !s.saveSearchHistory,
               onChanged: (v) => ctl.update(s.copyWith(saveSearchHistory: !v)),
             ),
             ListTile(
-              title: const Text("Effacer l'historique des vidéos regardées"),
+              title: const Text('Effacer l'historique des vidéos regardées'),
               onTap: () async {
                 await ref.read(libraryProvider).clearHistory();
                 if (context.mounted) showSnack(context, 'Historique des vidéos regardées effacé');
               },
             ),
             ListTile(
-              title: const Text("Effacer l'historique des recherches"),
+              title: const Text('Effacer l'historique des recherches'),
               onTap: () async {
                 await ref.read(libraryProvider).clearSearches();
                 if (context.mounted) showSnack(context, 'Historique des recherches effacé');
