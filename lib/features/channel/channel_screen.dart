@@ -13,7 +13,7 @@ import '../../ui/widgets/html_text.dart';
 import '../../ui/widgets/video_tiles.dart';
 
 /// Supported channel tabs in English and French, following YouTube's language setting.
-const _supportedTabs = {'Home', 'Accueil', 'Videos', 'Vidéos', 'Shorts', 'Live', 'En direct', 'Diffusions en direct', 'Releases', 'Sorties', 'Playlists', 'Podcasts', 'Posts', 'Publications'};
+const _supportedTabs = {'Home', 'Accueil', 'Videos', 'Vidéos', 'Shorts', 'Live', 'En direct', 'Diffusions en direct', 'Releases', 'Sorties', 'Playlists', 'Podcasts', 'Posts', 'Publications', 'Communauté'};
 
 class ChannelScreen extends ConsumerWidget {
   const ChannelScreen({super.key, required this.channelId});
@@ -32,7 +32,9 @@ class ChannelScreen extends ConsumerWidget {
       data: (p) {
         // Keep the channel's name and picture fresh in Subscriptions.
         ref.read(libraryProvider).refreshSubscription(p.asItem);
-        final tabs = p.tabs.where((t) => _supportedTabs.contains(t.title)).toList();
+        final supportedTabs = p.tabs.where((t) => _supportedTabs.contains(t.title)).toList();
+        // Never create a zero-tab controller: some YouTube locales use labels we do not recognize yet.
+        final tabs = supportedTabs.isNotEmpty ? supportedTabs : p.tabs.take(1).toList();
         return DefaultTabController(
           length: tabs.length,
           child: Scaffold(
@@ -63,7 +65,7 @@ class ChannelScreen extends ConsumerWidget {
               body: TabBarView(
                 children: [
                   for (final t in tabs)
-                    if (t.title.toLowerCase() == 'posts' || t.title.toLowerCase() == 'publications')
+                    if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
                       _ChannelPostsWebView(channelId: channelId)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
