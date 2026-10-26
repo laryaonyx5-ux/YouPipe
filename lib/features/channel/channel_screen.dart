@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../innertube/models.dart';
 import '../../providers.dart';
@@ -66,7 +65,7 @@ class ChannelScreen extends ConsumerWidget {
                 children: [
                   for (final t in tabs)
                     if (['posts', 'publications', 'communauté'].contains(t.title.toLowerCase()))
-                      _ChannelPostsWebView(channelId: channelId)
+                      _ChannelPostsTab(channelId: channelId, tab: t)
                     else
                       _TabContent(channelId: channelId, tab: t, initial: t.selected ? p : null),
                 ],
@@ -290,43 +289,263 @@ class _TabContentState extends ConsumerState<_TabContent> with AutomaticKeepAliv
 }
 
 
-/// YouTube Community posts are rendered by YouTube's own channel posts page.
-/// This keeps text, images, polls and newer post formats visible without losing them
-/// whenever YouTube changes its post renderer schema.
-class _ChannelPostsWebView extends StatefulWidget {
-  const _ChannelPostsWebView({required this.channelId});
+/// Native Community posts loaded from YouTube's InnerTube browse endpoint.
+class _ChannelPostsTab extends ConsumerStatefulWidget {
+  const _ChannelPostsTab({required this.channelId, required this.tab});
 
   final String channelId;
+  final ChannelTab tab;
 
   @override
-  State<_ChannelPostsWebView> createState() => _ChannelPostsWebViewState();
+  ConsumerState<_ChannelPostsTab> createState() => _ChannelPostsTabState();
 }
 
-class _ChannelPostsWebViewState extends State<_ChannelPostsWebView> {
-  late final WebViewController _controller;
+class _ChannelPostsTabState extends ConsumerState<_ChannelPostsTab> {
+  final ScrollController _scroll = ScrollController();
+  final List<CommunityPost> _posts = [];
+  String? _continuation;
+  Object? _error;
+  bool _loading = true;
+  bool _loadingMore = false;
+  bool _hasLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onNavigationRequest: (request) {
-            final uri = Uri.tryParse(request.url);
-            if (uri == null) return NavigationDecision.prevent;
-            // Keep links inside YouTube in this tab; don't let malformed URLs navigate away.
-            return uri.scheme == 'https' &&
-                    (uri.host == 'youtube.com' || uri.host.endsWith('.youtube.com') ||
-                        uri.host == 'youtu.be')
-                ? NavigationDecision.navigate
-                : NavigationDecision.prevent;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse('https://www.youtube.com/channel/${widget.channelId}/posts'));
+    _scroll.addListener(_maybeLoadMore);
+    _loadFirst();
   }
 
   @override
-  Widget build(BuildContext context) => WebViewWidget(controller: _controller);
+  void didUpdateWidget(covariant _ChannelPostsTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.channelId != widget.channelId || oldWidget.tab.params != widget.tab.params) {
+      _posts.clear();
+      _continuation = null;
+      _error = null;
+      _hasLoaded = false;
+      _loading = true;
+      _loadFirst();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scroll
+      ..removeListener(_maybeLoadMore)
+      ..dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadFirst() async {
+    if (_hasLoaded) return;
+    _hasLoaded = true;
+    try {
+      final page = await ref.read(innerTubeProvider).channelPosts(
+        widget.channelId,
+        params: widget.tab.params ?? '',
+      );
+      if (!mounted) return;
+      setState(() {
+        _posts
+          ..clear()
+          ..addAll(page.posts);
+        _continuation = page.continuation;
+        _loading = false;
+        _error = null;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _error = e;
+      });
+    }
+  }
+
+  void _maybeLoadMore() {
+    if (!_scroll.hasClients || _scroll.position.extentAfter > 600 || _loadingMore || _continuation == null) return;
+    _loadMore();
+  }
+
+  Future<void> _loadMore() async {
+    final token = _continuation;
+    if (token == null || _loadingMore) return;
+    setState(() => _loadingMore = true);
+    try {
+      final page = await ref.read(innerTubeProvider).channelPostsContinuation(token);
+      if (!mounted) return;
+      setState(() {
+        final known = _posts.map((p) => p.id).toSet();
+        _posts.addAll(page.posts.where((p) => known.add(p.id)));
+        _continuation = page.continuation == token ? null : page.continuation;
+        _loadingMore = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loadingMore = false;
+        _error = e;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const CustomScrollView(
+        slivers: [SliverFillRemaining(hasScrollBody: false, child: Center(child: CircularProgressIndicator()))],
+      );
+    }
+    if (_error != null && _posts.isEmpty) {
+      return CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Impossible de charger les publications.'),
+                    const SizedBox(height: 12),
+                    FilledButton(onPressed: () { _hasLoaded = false; setState(() => _loading = true); _loadFirst(); }, child: const Text('Réessayer')),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    if (_posts.isEmpty) {
+      return const CustomScrollView(
+        slivers: [SliverFillRemaining(hasScrollBody: false, child: Center(child: Text('Aucune publication trouvée.')))],
+      );
+    }
+    return RefreshIndicator(
+      onRefresh: () async {
+        _hasLoaded = false;
+        setState(() {
+          _loading = true;
+          _error = null;
+          _continuation = null;
+          _posts.clear();
+        });
+        await _loadFirst();
+      },
+      child: CustomScrollView(
+        controller: _scroll,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => _CommunityPostCard(post: _posts[index]),
+                childCount: _posts.length,
+              ),
+            ),
+          ),
+          if (_loadingMore)
+            const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+          if (_error != null)
+            SliverToBoxAdapter(
+              child: Center(
+                child: TextButton(onPressed: _loadMore, child: const Text('Erreur de chargement — réessayer')),
+              ),
+            ),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          const SliverBottomInset(),
+        ],
+      ),
+    );
+  }
+}
+
+class _CommunityPostCard extends StatelessWidget {
+  const _CommunityPostCard({required this.post});
+
+  final CommunityPost post;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.yt;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      color: c.surface,
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Avatar(post.authorAvatar, size: 40, name: post.author),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(post.author ?? 'Publication', style: TextStyle(color: c.textPrimary, fontWeight: FontWeight.w600)),
+                      if (post.publishedText != null)
+                        Text(post.publishedText!, style: TextStyle(color: c.textSecondary, fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (post.text.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              SelectableText(post.text, style: TextStyle(color: c.textPrimary, height: 1.35)),
+            ],
+            for (final url in post.images)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LayoutBuilder(
+                    builder: (context, box) => YtImage(url, width: box.maxWidth, fit: BoxFit.contain),
+                  ),
+                ),
+              ),
+            if (post.pollOptions.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              for (final option in post.pollOptions)
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(bottom: 6),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: c.outline),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(option, style: TextStyle(color: c.textPrimary)),
+                ),
+            ],
+            if (post.likeCount != null || post.commentCount != null) ...[
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  if (post.likeCount != null) ...[
+                    Icon(Symbols.thumb_up, size: 17, color: c.textSecondary),
+                    const SizedBox(width: 4),
+                    Text(post.likeCount!, style: TextStyle(color: c.textSecondary, fontSize: 12)),
+                    const SizedBox(width: 16),
+                  ],
+                  if (post.commentCount != null) ...[
+                    Icon(Symbols.mode_comment, size: 17, color: c.textSecondary),
+                    const SizedBox(width: 4),
+                    Text(post.commentCount!, style: TextStyle(color: c.textSecondary, fontSize: 12)),
+                  ],
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }
