@@ -262,7 +262,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
     final lib = ref.read(libraryProvider);
     void remove(VideoItem v) {
       unawaited(isLiked ? lib.setLiked(v, false) : lib.removeFromPlaylist(id, v.id));
-      showSnack(context, 'Removed from $title');
+      showSnack(context, 'Retiré de $title');
     }
 
     return Scaffold(
@@ -274,7 +274,7 @@ class LocalPlaylistScreen extends ConsumerWidget {
               icon: const Icon(Symbols.more_vert),
               onSelected: (a) async {
                 if (a == 'rename') {
-                  final name = await promptText(context, title: 'Rename playlist', initial: playlist.name);
+                  final name = await promptText(context, title: 'Renommer la playlist', initial: playlist.name);
                   if (name != null && name.trim().isNotEmpty) await lib.renamePlaylist(id, name.trim());
                 } else if (a == 'delete') {
                   // It can't be undone, so YouTube asks first.
@@ -282,10 +282,10 @@ class LocalPlaylistScreen extends ConsumerWidget {
                     context: context,
                     builder: (dialog) => AlertDialog(
                       title: const Text('Supprimer la playlist ?'),
-                      content: Text('"${playlist.name}" will be permanently deleted.'),
+                      content: Text('"${playlist.name}" sera définitivement supprimée.'),
                       actions: [
-                        TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Cancel')),
-                        TextButton(onPressed: () => Navigator.pop(dialog, true), child: const Text('Delete')),
+                        TextButton(onPressed: () => Navigator.pop(dialog, false), child: const Text('Annuler')),
+                        TextButton(onPressed: () => Navigator.pop(dialog, true), child: const Text('Supprimer')),
                       ],
                     ),
                   );
