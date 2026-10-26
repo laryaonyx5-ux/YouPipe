@@ -125,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!mounted) return;
     if (ok) {
       context.pop(true);
-      showSnack(context, 'Signed in');
+      showSnack(context, 'Connecté');
     } else {
       _finishing = false;
     }
@@ -134,7 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('Sign in'),
+      title: const Text('Se connecter'),
       leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.close)),
       bottom: _progress < 100
           ? PreferredSize(
@@ -167,8 +167,8 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('You', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
-                Text('Your library lives on this device', style: TextStyle(color: c.textSecondary, fontSize: 13)),
+                const Text('Vous', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                Text('Votre bibliothèque est stockée sur cet appareil', style: TextStyle(color: c.textSecondary, fontSize: 13)),
                 const SizedBox(height: 8),
                 OutlinedButton.icon(
                   onPressed: () => context.push('/login'),
@@ -202,7 +202,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(account?.name ?? 'Signed in', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+                  Text(account?.name ?? 'Connecté', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
                   if (account?.handle != null) Text(account!.handle!, style: TextStyle(color: c.textSecondary)),
                   TextButton(
                     style: TextButton.styleFrom(padding: EdgeInsets.zero, foregroundColor: c.link),
@@ -249,7 +249,7 @@ Widget accountHeader(BuildContext context, WidgetRef ref) {
       ),
       ListTile(
         leading: const Icon(Symbols.thumb_up, weight: 300),
-        title: const Text('Liked videos'),
+        title: const Text('Vidéos "J'aime"'),
         onTap: () => openPlaylist(context, ref, 'LL'),
       ),
       ListTile(
