@@ -50,8 +50,8 @@ enum VideoQualityPref {
 class AppSettings {
   const AppSettings({
     this.themeMode = ThemeMode.system,
-    this.hl = 'en',
-    this.gl = 'US',
+    this.hl = 'fr',
+    this.gl = 'FR',
     this.quality = VideoQualityPref.auto,
     this.autoplay = true,
     this.saveHistory = true,
@@ -109,8 +109,8 @@ class SettingsController extends Notifier<AppSettings> {
     final p = ref.watch(prefsProvider);
     final s = AppSettings(
       themeMode: ThemeMode.values.asNameMap()[p.getString('themeMode')] ?? ThemeMode.system,
-      hl: p.getString('hl') ?? 'en',
-      gl: p.getString('gl') ?? 'US',
+      hl: p.getString('hl') ?? 'fr',
+      gl: p.getString('gl') ?? 'FR',
       quality: VideoQualityPref.values.asNameMap()[p.getString('quality')] ?? VideoQualityPref.auto,
       autoplay: p.getBool('autoplay') ?? true,
       saveHistory: p.getBool('saveHistory') ?? true,
