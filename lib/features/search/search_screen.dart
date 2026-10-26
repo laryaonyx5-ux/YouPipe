@@ -83,7 +83,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         context: context,
                         builder: (d) => AlertDialog(
                           title: Text(text),
-                          content: const Text("Supprimer de l'historique de recherche ?"),
+                          content: const Text('Supprimer de l'historique de recherche ?'),
                           actions: [
                             TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Annuler')),
                             TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Retirer')),
@@ -223,7 +223,7 @@ class ResultsScreen extends ConsumerWidget {
                   child: EmptyView(
                     icon: Symbols.search_off,
                     title: 'Aucun résultat trouvé',
-                    message: "Essayez d'autres mots-clés",
+                    message: 'Essayez d'autres mots-clés',
                   ),
                 )
               else
