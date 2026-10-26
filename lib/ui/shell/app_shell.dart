@@ -689,7 +689,7 @@ class _MiniProgress extends ConsumerWidget {
   }
 }
 
-const _navLabels = ['Home', 'Shorts', 'Subscriptions', 'You'];
+const _navLabels = ['Accueil', 'Shorts', 'Abonnements', 'Vous'];
 
 /// One destination of the bottom bar or the side rail: the icon (filled when selected) over its label.
 class _NavItem extends StatelessWidget {
