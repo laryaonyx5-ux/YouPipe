@@ -223,7 +223,7 @@ Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video)
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
-                child: Text('Download quality', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                child: Text('Qualité du téléchargement', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
               ),
               if (snap.hasError)
                 Padding(
@@ -252,7 +252,7 @@ Future<void> startDownload(BuildContext context, WidgetRef ref, VideoItem video)
   );
   if (height == null) return;
   await ref.read(downloadManagerProvider).start(video, height);
-  if (context.mounted) showSnack(context, 'Téléchargement…', action: 'View', onAction: () => openDownloads(context, ref));
+  if (context.mounted) showSnack(context, 'Téléchargement…', action: 'Voir', onAction: () => openDownloads(context, ref));
 }
 
 Future<void> _showManage(BuildContext context, WidgetRef ref, DownloadEntry d) => showModalBottomSheet<void>(
@@ -320,14 +320,14 @@ class DownloadsScreen extends ConsumerWidget {
     final used = all.fold<int>(0, (sum, d) => sum + (d.row.state == DownloadState.done ? d.row.sizeBytes : 0));
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Downloads'),
+        title: const Text('Téléchargements'),
         leading: IconButton(onPressed: () => context.pop(), icon: const Icon(Symbols.arrow_back)),
       ),
       body: MaxContentWidth(
         child: all.isEmpty
             ? const EmptyView(
                 icon: Symbols.download,
-                title: 'No downloads',
+                title: 'Aucun téléchargement',
                 message: 'Videos you download show up here, and play without a connection.',
               )
             : ListView(
