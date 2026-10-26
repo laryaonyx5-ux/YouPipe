@@ -138,7 +138,7 @@ class YouScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   children: [
                     _PlaylistCard(
-                      title: 'Vidéos "J'aime"',
+                      title: "Vidéos \"J'aime\"",
                       subtitle: '${liked.length} videos',
                       thumbnail: liked.firstOrNull?.thumbnailOrDefault,
                       icon: Symbols.thumb_up,
@@ -279,17 +279,17 @@ class HistoryScreen extends ConsumerWidget {
         actions: [
           if (history.isNotEmpty)
             IconButton(
-              tooltip: 'Effacer tout l'historique des vidéos regardées',
+              tooltip: "Effacer tout l'historique des vidéos regardées",
               icon: const Icon(Symbols.delete),
               onPressed: () async {
                 final ok = await showDialog<bool>(
                   context: context,
                   builder: (d) => AlertDialog(
-                    title: const Text('Effacer l'historique des vidéos regardées ?'),
-                    content: const Text('L'historique des vidéos regardées sera effacé de cet appareil.'),
+                    title: const Text("Effacer l'historique des vidéos regardées ?"),
+                    content: const Text("L'historique des vidéos regardées sera effacé de cet appareil."),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')),
-                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text('Effacer l'historique des vidéos regardées')),
+                      TextButton(onPressed: () => Navigator.pop(d, true), child: const Text("Effacer l'historique des vidéos regardées")),
                     ],
                   ),
                 );
@@ -303,7 +303,7 @@ class HistoryScreen extends ConsumerWidget {
             ? const EmptyView(
                 icon: Symbols.history,
                 title: 'Gardez une trace des vidéos que vous regardez',
-                message: 'Watch history isn\'t viewable when empty.',
+                message: "L'historique est vide.",
               )
             : ListView.builder(
                 itemCount: rows.length,
@@ -316,9 +316,9 @@ class HistoryScreen extends ConsumerWidget {
                     h.video,
                     onRemove: () {
                       unawaited(lib.removeFromHistory(h.video.id));
-                      showSnack(context, 'Retiré de l'historique');
+                      showSnack(context, "Retiré de l'historique");
                     },
-                    removeLabel: 'Retirer de l'historique',
+                    removeLabel: "Retirer de l'historique",
                   ),
                   _ => const SizedBox.shrink(),
                 },
