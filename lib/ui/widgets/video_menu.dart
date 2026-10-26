@@ -201,7 +201,7 @@ Future<void> showSaveToPlaylist(BuildContext context, WidgetRef ref, VideoItem v
                   final lib = ref.read(libraryProvider);
                   final id = await lib.createPlaylist(name.trim());
                   await lib.addToPlaylist(id, video);
-                  if (context.mounted) showSnack(context, 'Saved to ${name.trim()}');
+                  if (context.mounted) showSnack(context, 'Enregistré dans ${name.trim()}');
                 },
               ),
             ],
