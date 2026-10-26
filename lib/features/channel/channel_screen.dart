@@ -12,8 +12,8 @@ import '../../ui/widgets/common.dart';
 import '../../ui/widgets/html_text.dart';
 import '../../ui/widgets/video_tiles.dart';
 
-/// Tabs YouPipe can show (Posts, Store and channel search aren't supported).
-const _supportedTabs = {'Home', 'Videos', 'Shorts', 'Live', 'Releases', 'Playlists', 'Podcasts', 'Posts'};
+/// Supported channel tabs in English and French, following YouTube's language setting.
+const _supportedTabs = {'Home', 'Accueil', 'Videos', 'Vidéos', 'Shorts', 'Live', 'En direct', 'Diffusions en direct', 'Releases', 'Sorties', 'Playlists', 'Podcasts', 'Posts', 'Publications'};
 
 class ChannelScreen extends ConsumerWidget {
   const ChannelScreen({super.key, required this.channelId});
