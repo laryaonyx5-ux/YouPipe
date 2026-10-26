@@ -212,7 +212,7 @@ class _ChannelStrip extends ConsumerWidget {
           ),
         ),
         TextButton(
-          onPressed: () => context.push('${branchPrefix(context)}/channels'),
+          onPressed: () => openChannels(context, ref),
           style: TextButton.styleFrom(foregroundColor: context.yt.link),
           child: const Text('Tout', style: TextStyle(fontWeight: FontWeight.w500)),
         ),
